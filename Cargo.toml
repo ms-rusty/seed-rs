@@ -1,7 +1,25 @@
-[package]
+[workspace.package]
 name = "seed-rs"
 version = "0.1.0"
 edition = "2021"
 description = "Seed-RS"
-authors = ["DooMWhite <doomwhitex@gmail.com>", "Ramon <ramonbernado.contato@gmail.com>"]
+authors = [
+    "DooMWhite <doomwhitex@gmail.com>",
+    "Ramon Bernardo <ramonbernado.contato@gmail.com>",
+]
 license = "MIT OR Apache-2.0"
+
+[workspace]
+resolver = "2"
+members = ["seed", "seed-network-server"]
+
+[workspace.dependencies]
+bevy = { git = "https://github.com/bevyengine/bevy", rev = "71842c5ac92dc61b0c73446a233078d5285ecf7c" }
+
+# Enable a small amount of optimization in debug mode.
+[profile.dev]
+opt-level = 1
+
+# Enable high optimizations for dependencies (incl. Bevy), but not for our code:
+[profile.dev.package."*"]
+opt-level = 3
