@@ -4,5 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bevy = { workspace = true }
 seed-network-server = { path = "../seed-network-server" }
+
+anyhow = { workspace = true }
+bevy = { workspace = true }
+tokio = { workspace = true }

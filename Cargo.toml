@@ -11,10 +11,12 @@ license = "MIT OR Apache-2.0"
 
 [workspace]
 resolver = "2"
-members = ["seed", "seed-network-server"]
+members = ["seed", "seed-network-common", "seed-network-server"]
 
 [workspace.dependencies]
+anyhow = "1.0.71"
 bevy = { git = "https://github.com/bevyengine/bevy", rev = "71842c5ac92dc61b0c73446a233078d5285ecf7c" }
+tokio = { version = "1.28.0", features = ["full"] }
 
 # Enable a small amount of optimization in debug mode.
 [profile.dev]
