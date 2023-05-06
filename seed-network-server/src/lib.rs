@@ -1,16 +1,29 @@
-use tokio::{io::AsyncReadExt, net::TcpListener};
+use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use tokio::net::TcpListener;
 
 pub struct NetworkServer {
     listener: TcpListener,
+    configuration: NetworkConfiguration,
 }
 
 impl NetworkServer {
-    pub fn new(listener: TcpListener) -> Self {
-        Self { listener }
+    pub async fn new() -> Self {
+        let configuration = NetworkConfiguration {
+            addr: SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 65535),
+        };
+
+        let listener = TcpListener::bind(configuration.addr)
+            .await
+            .expect("Error on bind TcpListener.");
+
+        Self {
+            listener,
+            configuration,
+        }
     }
 
     pub async fn run(&self) {
-        while let Ok((mut stream, socket_addr)) = self.listener.accept().await {
+        while let Ok((stream, socket_addr)) = self.listener.accept().await {
             println!("socket_addr: {:?}", socket_addr);
 
             if let Ok(peer_addr) = stream.peer_addr() {
@@ -27,4 +40,8 @@ impl NetworkServer {
             // println!("{:?}", buffer);
         }
     }
+}
+
+struct NetworkConfiguration {
+    addr: SocketAddr,
 }

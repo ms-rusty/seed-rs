@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+seed-game-server = { path = "../seed-game-server" }
 seed-network-server = { path = "../seed-network-server" }
 
 anyhow = { workspace = true }

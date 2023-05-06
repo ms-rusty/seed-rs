@@ -1,12 +1,13 @@
+use seed_game_server::GameServer;
 use seed_network_server::NetworkServer;
-use tokio::{net::TcpListener, runtime::Builder};
+use tokio::runtime::Builder;
 
 fn main() {
     let runtime = Builder::new_multi_thread()
         .worker_threads(4)
         .enable_all()
         .build()
-        .unwrap();
+        .expect("Error on build the Tokio Runtime.");
 
     runtime.block_on(async {
         async_main().await;
@@ -14,9 +15,12 @@ fn main() {
 }
 
 async fn async_main() {
-    let listener = TcpListener::bind("127.0.0.1:65535")
-        .await
-        .expect("Error on bind TcpListener.");
+    let game_server = GameServer::new();
+    let network_server = NetworkServer::new().await;
 
-    NetworkServer::new(listener).run().await;
+    tokio::task::spawn(async move {
+        network_server.run().await;
+    });
+
+    game_server.run().await;
 }
