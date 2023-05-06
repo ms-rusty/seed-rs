@@ -51,14 +51,22 @@ fn test() {
     }
 }
 
-pub struct RequestStatusPacket;
+pub struct ServerStatusPacket; // server = "response" / "game update"
 
-impl TryFrom<Packet> for RequestStatusPacket {
+impl TryFrom<&ServerStatusPacket> for Packet {
     type Error = PacketError;
 
-    fn try_from(value: Packet) -> Result<Self, Self::Error> {}
+    fn try_from(_server_status_packet: &ServerStatusPacket) -> Result<Self, Self::Error> {
+        todo!()
+    }
 }
 
-impl From<RequestStatusPacket> for Packet {
-    fn from(value: RequestStatusPacket) -> Self {}
+pub struct ClientStatusPacket; // client = request
+
+impl TryFrom<&Packet> for ClientStatusPacket {
+    type Error = PacketError;
+
+    fn try_from(_packet: &Packet) -> Result<Self, Self::Error> {
+        todo!()
+    }
 }
