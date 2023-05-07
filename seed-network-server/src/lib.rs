@@ -42,7 +42,13 @@ impl NetworkServer {
     }
 
     fn handle_commands(&self) {
-        // network commands
+        // let command_receiver = self.channels.command_receiver.clone();
+
+        tokio::task::spawn(async move {
+            // loop {
+            // network command
+            // }
+        });
     }
 
     async fn handle_connections(self) {
