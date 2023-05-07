@@ -1,14 +1,30 @@
-use seed_game_world::GameWorld;
-use seed_network_server::NetworkServer;
+use bevy::{
+    app::ScheduleRunnerPlugin,
+    prelude::{App, FrameCountPlugin, TaskPoolPlugin, TypeRegistrationPlugin},
+    time::TimePlugin,
+};
+use plugin::SeedPlugin;
+use seed_database_server::DatabaseServerPlugin;
+use seed_game_world::GameWorldPlugin;
+use seed_network_server::NetworkServerPlugin;
+
+mod plugin;
 
 fn main() {
-    let game_world = GameWorld::new();
+    let mut app = App::new();
 
-    let network_server = NetworkServer::new();
+    // Add bevy minimal plugins.
+    app.add_plugin(TaskPoolPlugin::default());
+    app.add_plugin(TypeRegistrationPlugin::default());
+    app.add_plugin(FrameCountPlugin::default());
+    app.add_plugin(TimePlugin::default());
+    app.add_plugin(ScheduleRunnerPlugin::default());
 
-    std::thread::spawn(move || {
-        game_world.run();
-    });
+    // Add seed plugins.
+    app.add_plugin(SeedPlugin);
+    app.add_plugin(DatabaseServerPlugin);
+    app.add_plugin(GameWorldPlugin);
+    app.add_plugin(NetworkServerPlugin);
 
-    network_server.run();
+    app.run();
 }

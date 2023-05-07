@@ -1,12 +1,13 @@
 [package]
 name = "seed"
-version = "0.1.0"
-edition = "2021"
+version = { workspace = true }
+edition = { workspace = true }
 
 [dependencies]
+seed-database-server = { path = "../seed-database-server" }
 seed-game-world = { path = "../seed-game-world" }
 seed-network-server = { path = "../seed-network-server" }
 
-anyhow = { workspace = true }
 bevy = { workspace = true }
+bevy-tokio-tasks = { workspace = true }
 tokio = { workspace = true }

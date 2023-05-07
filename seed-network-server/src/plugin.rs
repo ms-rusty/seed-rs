@@ -12,9 +12,9 @@ use crate::{
     },
 };
 
-pub struct NetworkServerPlugin;
+pub struct NetworkServerPlugin2;
 
-impl Plugin for NetworkServerPlugin {
+impl Plugin for NetworkServerPlugin2 {
     fn build(&self, app: &mut App) {
         app.add_plugin(TokioTasksPlugin::default());
 
