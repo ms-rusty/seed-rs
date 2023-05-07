@@ -23,9 +23,10 @@ members = [
 
 [workspace.dependencies]
 anyhow = "1.0.71"
-bevy = { git = "https://github.com/bevyengine/bevy", rev = "71842c5ac92dc61b0c73446a233078d5285ecf7c" }
-crossbeam-channel = "0.5.8"
+bevy = "0.10.1"
+bevy-tokio-tasks = "0.10.2"
 bytes = "1.4.0"
+crossbeam-channel = "0.5.8"
 tokio = { version = "1.28.0", features = ["full"] }
 
 # Enable a small amount of optimization in debug mode.

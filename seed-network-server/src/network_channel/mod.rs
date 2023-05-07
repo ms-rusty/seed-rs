@@ -1,9 +1,11 @@
+use bevy::prelude::Resource;
 pub use event::{
     ConnectionEvent, NetworkEventChannel, NetworkEventChannelReceiver, NetworkEventChannelSender,
 };
 
 pub mod event;
 
+#[derive(Resource)]
 pub struct NetworkChannels {
     pub event_sender: NetworkEventChannelSender,
     pub event_receiver: NetworkEventChannelReceiver,
