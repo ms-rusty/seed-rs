@@ -13,8 +13,10 @@ license = "MIT OR Apache-2.0"
 resolver = "2"
 members = [
     "seed",
+    "seed-database-common",
+    "seed-database-server",
     "seed-game-common",
-    "seed-game-server",
+    "seed-game-world",
     "seed-network-common",
     "seed-network-server",
 ]
@@ -22,6 +24,7 @@ members = [
 [workspace.dependencies]
 anyhow = "1.0.71"
 bevy = { git = "https://github.com/bevyengine/bevy", rev = "71842c5ac92dc61b0c73446a233078d5285ecf7c" }
+crossbeam-channel = "0.5.8"
 bytes = "1.4.0"
 tokio = { version = "1.28.0", features = ["full"] }
 

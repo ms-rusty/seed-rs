@@ -1,4 +1,4 @@
-use seed_game_server::GameServer;
+use seed_game_world::GameWorld;
 use seed_network_server::NetworkServer;
 use tokio::runtime::Builder;
 
@@ -15,12 +15,13 @@ fn main() {
 }
 
 async fn async_main() {
-    let game_server = GameServer::new();
+    let game_world = GameWorld::new();
+
     let network_server = NetworkServer::new().await;
 
-    tokio::task::spawn(async move {
-        network_server.run().await;
+    std::thread::spawn(move || {
+        game_world.run();
     });
 
-    game_server.run().await;
+    network_server.run().await;
 }

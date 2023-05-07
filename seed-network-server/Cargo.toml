@@ -4,6 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+seed-network-common = { path = "../seed-network-common" }
+
 anyhow = { workspace = true }
 bevy = { workspace = true }
+crossbeam-channel = { workspace = true }
 tokio = { workspace = true }
