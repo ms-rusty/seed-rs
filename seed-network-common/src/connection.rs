@@ -1,13 +1,13 @@
 use tokio::{io::BufWriter, net::TcpStream};
 
 pub struct Connection {
-    stream: BufWriter<TcpStream>,
+    _stream: BufWriter<TcpStream>,
 }
 
 impl Connection {
     pub fn new(stream: TcpStream) -> Self {
         Self {
-            stream: BufWriter::new(stream),
+            _stream: BufWriter::new(stream),
         }
     }
 }
