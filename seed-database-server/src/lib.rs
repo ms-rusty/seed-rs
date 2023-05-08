@@ -1,7 +1,3 @@
-use bevy::prelude::{App, Plugin};
+pub use plugin::DatabaseServerPlugin;
 
-pub struct DatabaseServerPlugin;
-
-impl Plugin for DatabaseServerPlugin {
-    fn build(&self, app: &mut App) {}
-}
+mod plugin;

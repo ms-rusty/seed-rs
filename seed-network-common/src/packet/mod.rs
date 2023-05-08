@@ -34,22 +34,22 @@ pub enum PacketError {
     InvalidPacket,
 }
 
-fn test() {
-    let a = PacketBound::Client(ClientPacketStage::Handshaking);
-    match a {
-        PacketBound::Client(stage) => match stage {
-            ClientPacketStage::Handshaking => todo!(),
-            ClientPacketStage::Status => todo!(),
-            ClientPacketStage::Login => todo!(),
-            ClientPacketStage::Play => todo!(),
-        },
-        PacketBound::Server(stage) => match stage {
-            ServerPacketStage::Status => todo!(),
-            ServerPacketStage::Login => todo!(),
-            ServerPacketStage::Play => todo!(),
-        },
-    }
-}
+// fn test() {
+//     let a = PacketBound::Client(ClientPacketStage::Handshaking);
+//     match a {
+//         PacketBound::Client(stage) => match stage {
+//             ClientPacketStage::Handshaking => todo!(),
+//             ClientPacketStage::Status => todo!(),
+//             ClientPacketStage::Login => todo!(),
+//             ClientPacketStage::Play => todo!(),
+//         },
+//         PacketBound::Server(stage) => match stage {
+//             ServerPacketStage::Status => todo!(),
+//             ServerPacketStage::Login => todo!(),
+//             ServerPacketStage::Play => todo!(),
+//         },
+//     }
+// }
 
 pub struct ServerStatusPacket; // server = "response" / "game update"
 

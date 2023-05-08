@@ -1,7 +1,3 @@
-use bevy::prelude::{App, Plugin};
+pub use plugin::GameWorldPlugin;
 
-pub struct GameWorldPlugin;
-
-impl Plugin for GameWorldPlugin {
-    fn build(&self, app: &mut App) {}
-}
+mod plugin;
