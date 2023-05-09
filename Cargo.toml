@@ -28,7 +28,9 @@ bevy = "0.10.1"
 bevy-tokio-tasks = "0.10.2"
 bytes = "1.4.0"
 crossbeam-channel = "0.5.8"
+serde = "1.0.162"
 tokio = { version = "1.28.0", features = ["full"] }
+toml = "0.7.3"
 
 # Enable a small amount of optimization in debug mode.
 [profile.dev]

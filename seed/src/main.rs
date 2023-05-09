@@ -1,8 +1,9 @@
 use bevy::{
-    app::ScheduleRunnerPlugin,
+    app::{ScheduleRunnerPlugin, ScheduleRunnerSettings},
     prelude::{App, FrameCountPlugin, TaskPoolPlugin, TypeRegistrationPlugin},
     time::TimePlugin,
 };
+use bevy_tokio_tasks::TokioTasksPlugin;
 use plugin::SeedPlugin;
 use seed_database_server::DatabaseServerPlugin;
 use seed_game_world::GameWorldPlugin;
@@ -25,6 +26,15 @@ fn main() {
     app.add_plugin(DatabaseServerPlugin);
     app.add_plugin(GameWorldPlugin);
     app.add_plugin(NetworkServerPlugin);
+
+    // Tokio plugin.
+    app.add_plugin(TokioTasksPlugin::default());
+
+    // App Scheduler
+
+    app.insert_resource(ScheduleRunnerSettings::run_loop(
+        std::time::Duration::from_secs_f64(1.0 / 20.0), // 20 fps.
+    ));
 
     app.run();
 }
