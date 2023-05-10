@@ -1,6 +1,7 @@
-use bevy::prelude::{App, EventReader, Plugin};
+use bevy::prelude::{App, Commands, Component, EventReader, Plugin, Resource};
+use tokio::io::BufWriter;
 
-use crate::common::NetworkConnectionEvent;
+use crate::common::{ConnectionSuccess, NetworkConnectionEvent};
 
 pub struct NetworkConnectionPlugin;
 
@@ -10,13 +11,20 @@ impl Plugin for NetworkConnectionPlugin {
     }
 }
 
-fn connection_event_system(mut network_connection_events: EventReader<NetworkConnectionEvent>) {
-    for connection_event in &mut network_connection_events {
-        let NetworkConnectionEvent::Success(connection) = connection_event else {
-            println!("Connection error: {:?}", connection_event);
-            continue;
-        };
-
-        println!("New connection: {:?}", connection);
+fn connection_event_system(
+    mut commands: Commands,
+    mut network_connection_events: EventReader<NetworkConnectionEvent>,
+) {
+    for network_connection_event in &mut network_connection_events {
+        if let NetworkConnectionEvent::Success(connection) = network_connection_event {
+            commands.insert_resource(Connection {
+                stream: connection.0,
+            });
+        }
     }
+}
+
+#[derive(Resource)]
+struct Connection {
+    stream: tokio::net::TcpStream,
 }

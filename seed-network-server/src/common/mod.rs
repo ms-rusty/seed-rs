@@ -1,3 +1,3 @@
-pub use events::NetworkConnectionEvent;
+pub use events::{ConnectionFailure, ConnectionResult, ConnectionSuccess, NetworkConnectionEvent};
 
 mod events;

@@ -1,8 +1,6 @@
-use std::net::SocketAddr;
-
-type ConnectionSuccess = (tokio::net::TcpStream, SocketAddr);
-type ConnectionFailure = std::io::Error;
-type ConnectionResult = Result<ConnectionSuccess, ConnectionFailure>;
+pub type ConnectionSuccess = (tokio::net::TcpStream, std::net::SocketAddr);
+pub type ConnectionFailure = std::io::Error;
+pub type ConnectionResult = Result<ConnectionSuccess, ConnectionFailure>;
 
 #[derive(Debug)]
 pub enum NetworkConnectionEvent {
