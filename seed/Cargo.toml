@@ -10,7 +10,7 @@ seed-game-world = { path = "../seed-game-world" }
 seed-network-server = { path = "../seed-network-server" }
 
 bevy = { workspace = true }
-bevy-tokio-tasks = { workspace = true }
+bevy_tokio_runtime = { workspace = true }
 serde = { workspace = true }
 tokio = { workspace = true }
 toml = { workspace = true }

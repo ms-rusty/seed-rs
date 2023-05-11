@@ -8,6 +8,6 @@ seed-network-common = { path = "../seed-network-common" }
 
 anyhow = { workspace = true }
 bevy = { workspace = true }
-bevy-tokio-tasks = { workspace = true }
+bevy_tokio_runtime = { workspace = true }
 crossbeam-channel = { workspace = true }
 tokio = { workspace = true }

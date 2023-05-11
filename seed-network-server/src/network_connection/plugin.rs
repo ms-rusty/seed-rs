@@ -15,11 +15,13 @@ fn connection_event_system(
     mut commands: Commands,
     mut network_connection_events: EventReader<NetworkConnectionEvent>,
 ) {
+    println!("Len: {:?}", network_connection_events.len());
     for network_connection_event in &mut network_connection_events {
         if let NetworkConnectionEvent::Success(connection) = network_connection_event {
-            commands.insert_resource(Connection {
-                stream: connection.0,
-            });
+
+            // commands.insert_resource(Connection {
+            //     stream: connection.0,
+            // });
         }
     }
 }

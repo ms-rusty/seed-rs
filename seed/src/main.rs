@@ -1,11 +1,11 @@
 use bevy::{
     app::{ScheduleRunnerPlugin, ScheduleRunnerSettings},
     prelude::{
-        default, App, FrameCountPlugin, TaskPoolOptions, TaskPoolPlugin, TypeRegistrationPlugin,
+        App, FrameCountPlugin, States, TaskPoolOptions, TaskPoolPlugin, TypeRegistrationPlugin,
     },
     time::TimePlugin,
 };
-use bevy_tokio_tasks::TokioTasksPlugin;
+use bevy_tokio_runtime::TokioRuntimePlugin;
 use plugin::SeedPlugin;
 use seed_database_server::DatabaseServerPlugin;
 use seed_game_world::GameWorldPlugin;
@@ -37,15 +37,15 @@ fn main() {
     app.add_plugin(NetworkServerPlugin);
 
     // Tokio plugin.
-    app.add_plugin(TokioTasksPlugin {
-        make_runtime: Box::new(|| {
-            tokio::runtime::Builder::new_multi_thread()
-                .worker_threads(2)
-                .enable_all()
-                .build()
-                .expect("Failed to create Tokio runtime for background tasks")
-        }),
-    });
+    app.add_plugin(TokioRuntimePlugin::default());
 
     app.run();
+}
+
+#[derive(States, Default, Debug, PartialEq, Eq, Hash, Clone)]
+pub enum AppState {
+    #[default]
+    Loading,
+    StartingServices,
+    Running,
 }
