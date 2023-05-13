@@ -24,7 +24,7 @@ members = [
 
 [workspace.dependencies]
 anyhow = "1.0.71"
-bevy = "0.10.1"
+bevy = { git = "https://github.com/bevyengine/bevy", commit = "636f711d26b79cab068e029c4c058d45fca84970" }
 bevy_tokio_runtime = { git = "https://github.com/ms-rusty/bevy_tokio_runtime" }
 bytes = "1.4.0"
 crossbeam-channel = "0.5.8"

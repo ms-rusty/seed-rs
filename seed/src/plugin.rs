@@ -1,22 +1,32 @@
-use bevy::prelude::{App, Plugin, ResMut};
-use bevy_tokio_runtime::TokioRuntime;
+use bevy::{
+    app::RunFixedUpdateLoop,
+    prelude::{
+        App, First, FixedUpdate, IntoSystemConfigs, Last, Main, NextState, OnEnter, Plugin,
+        PostStartup, PostUpdate, PreStartup, PreUpdate, ResMut, Startup, StateTransition, Update,
+    },
+};
+use seed_common::AppState;
 
 pub struct SeedPlugin;
 
 impl Plugin for SeedPlugin {
     fn build(&self, app: &mut App) {
-        //app.add_startup_system(start_tokio_runtime);
-        // .in_schedule(OnExit(AppState::Loading))
+        app.add_systems(OnEnter(AppState::Loading), app_state_system);
+
+        app.add_systems(PreStartup, || println!("PreStartup"));
+        app.add_systems(Startup, || println!("Startup"));
+        app.add_systems(PostStartup, || println!("PostStartup"));
+        app.add_systems(First, || println!("First"));
+        app.add_systems(PreUpdate, || println!("PreUpdate"));
+        app.add_systems(StateTransition, || println!("StateTransition"));
+        app.add_systems(RunFixedUpdateLoop, || println!("RunFixedUpdateLoop"));
+        app.add_systems(FixedUpdate, || println!("FixedUpdate"));
+        app.add_systems(Update, || println!("Update"));
+        app.add_systems(PostUpdate, || println!("PostUpdate"));
+        app.add_systems(Last, || println!("Last"));
     }
 }
 
-fn start_tokio_runtime(mut tokio_runtime: ResMut<TokioRuntime>) {
-    let runtime = tokio::runtime::Builder::new_multi_thread()
-        .enable_io()
-        .enable_time()
-        .worker_threads(2)
-        .build()
-        .unwrap();
-
-    tokio_runtime.new(runtime);
+fn app_state_system(mut next_state: ResMut<NextState<AppState>>) {
+    next_state.set(AppState::Services);
 }

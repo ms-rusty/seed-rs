@@ -1,6 +1,4 @@
-use bevy::prelude::{
-    App, Commands, Deref, EventWriter, IntoSystemConfig, Plugin, Res, ResMut, Resource,
-};
+use bevy::prelude::{App, Commands, Deref, EventWriter, Plugin, Res, ResMut, Resource};
 use bevy_tokio_runtime::TokioRuntime;
 
 use crate::common::{ConnectionResult, NetworkConnectionEvent};
