@@ -3,5 +3,5 @@ use serde::Deserialize;
 
 #[derive(Resource, Default, Deserialize)]
 pub struct AppConfiguration {
-    tokio_runtime_threads: u8,
+    _tokio_runtime_threads: u8,
 }

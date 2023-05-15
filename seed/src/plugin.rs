@@ -1,8 +1,8 @@
 use bevy::{
     app::RunFixedUpdateLoop,
     prelude::{
-        App, First, FixedUpdate, IntoSystemConfigs, Last, Main, NextState, OnEnter, Plugin,
-        PostStartup, PostUpdate, PreStartup, PreUpdate, ResMut, Startup, StateTransition, Update,
+        App, First, FixedUpdate, Last, NextState, OnEnter, Plugin, PostStartup, PostUpdate,
+        PreStartup, PreUpdate, ResMut, Startup, StateTransition, Update,
     },
 };
 use seed_common::AppState;

@@ -1,6 +1,6 @@
 use tokio::{io::BufWriter, net::TcpStream};
 
-pub struct Connection {
+struct Connection {
     _stream: BufWriter<TcpStream>,
 }
 

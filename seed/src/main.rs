@@ -7,8 +7,8 @@ use bevy_tokio_runtime::TokioRuntimePlugin;
 use plugin::SeedPlugin;
 use seed_common::AppState;
 use seed_database_server::DatabaseServerPlugin;
-use seed_game_world::GameWorldPlugin;
-use seed_network_server::NetworkServerPlugin;
+use seed_game_world::GameWorldPlugins;
+use seed_network_server::NetworkServerPlugins;
 
 mod plugin;
 
@@ -33,8 +33,8 @@ fn main() {
     // Add seed plugins.
     app.add_plugin(SeedPlugin);
     app.add_plugin(DatabaseServerPlugin);
-    app.add_plugin(GameWorldPlugin);
-    app.add_plugin(NetworkServerPlugin);
+    app.add_plugins(GameWorldPlugins);
+    app.add_plugins(NetworkServerPlugins);
 
     // Tokio plugin.
     app.add_plugin(TokioRuntimePlugin::default());

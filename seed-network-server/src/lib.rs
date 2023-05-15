@@ -1,6 +1,5 @@
-pub use plugin::NetworkServerPlugin;
+pub use plugin::NetworkServerPlugins;
 
-mod common;
-mod network_connection;
-mod network_listener;
+mod network_manager;
+mod network_settings;
 mod plugin;

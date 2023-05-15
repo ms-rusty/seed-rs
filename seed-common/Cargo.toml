@@ -7,3 +7,4 @@ edition = { workspace = true }
 bevy = { workspace = true }
 serde = { workspace = true }
 tokio = { workspace = true }
+toml = { workspace = true }

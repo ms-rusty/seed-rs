@@ -1,9 +1,11 @@
-use bevy::prelude::{App, Plugin};
+use bevy::{app::PluginGroupBuilder, prelude::PluginGroup};
 
-pub struct GameWorldPlugin;
+use crate::game_settings::GameSettingsPlugin;
 
-impl Plugin for GameWorldPlugin {
-    fn build(&self, app: &mut App) {
-        app.add_startup_system(|| println!("Starting game world plugin."));
+pub struct GameWorldPlugins;
+
+impl PluginGroup for GameWorldPlugins {
+    fn build(self) -> PluginGroupBuilder {
+        PluginGroupBuilder::start::<Self>().add(GameSettingsPlugin)
     }
 }

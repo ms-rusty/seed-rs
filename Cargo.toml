@@ -28,8 +28,8 @@ bevy = { git = "https://github.com/bevyengine/bevy", commit = "636f711d26b79cab0
 bevy_tokio_runtime = { git = "https://github.com/ms-rusty/bevy_tokio_runtime" }
 bytes = "1.4.0"
 crossbeam-channel = "0.5.8"
-serde = "1.0.162"
-tokio = { version = "1.28.0", features = ["full"] }
+serde = "1.0.163"
+tokio = { version = "1.28.1", features = ["full"] }
 toml = "0.7.3"
 
 # Enable a small amount of optimization in debug mode.
