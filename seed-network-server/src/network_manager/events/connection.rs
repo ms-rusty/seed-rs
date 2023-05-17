@@ -1,5 +1,8 @@
-use std::net::SocketAddr;
-use tokio::{io::BufWriter, net::TcpStream};
+use std::{error::Error, io::ErrorKind, net::SocketAddr};
+use tokio::{
+    io::{AsyncReadExt, AsyncWriteExt, BufWriter},
+    net::TcpStream,
+};
 
 pub enum ConnectionEvent {
     Success(Connection),
@@ -19,7 +22,38 @@ impl Connection {
         }
     }
 
-    pub async fn read_packet(&mut self) -> Result<()> {}
+    pub async fn read_packet(&mut self) -> Result<(), std::io::Error> {
+        const SEGMENT_BITS: u8 = 0x7F;
+        const CONTINUE_BIT: u8 = 0x80;
 
-    pub async fn write_packet(&mut self) -> Result<()> {}
+        let mut value = 0;
+        let mut position = 0;
+
+        loop {
+            let current_byte = self.stream.read_u8().await?;
+            value |= (current_byte & SEGMENT_BITS) << position;
+
+            if (current_byte & CONTINUE_BIT) == 0 {
+                break;
+            }
+
+            position += 7;
+
+            if position >= 32 {
+                break; // error
+            }
+        }
+
+        // return value.
+
+        Ok(())
+    }
+
+    pub async fn write_packet(&mut self) -> Result<(), std::io::Error> {
+        Ok(())
+    }
+
+    pub async fn shutdown(&mut self) -> Result<(), std::io::Error> {
+        self.stream.shutdown().await
+    }
 }

@@ -33,10 +33,7 @@ pub struct NetworkChannel<T> {
 }
 
 impl<T> NetworkChannel<T> {
-    fn new(channel: Channel<T>) -> Self {
-        Self {
-            sender: channel.0,
-            receiver: channel.1,
-        }
+    pub fn new((sender, receiver): Channel<T>) -> Self {
+        Self { sender, receiver }
     }
 }

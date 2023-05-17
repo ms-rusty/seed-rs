@@ -1,8 +1,8 @@
-use bevy::prelude::{App, Plugin, PostStartup, PreUpdate};
+use bevy::prelude::{App, IntoSystemConfigs, Plugin, PostStartup, PreUpdate};
 
 use super::{
     resources::NetworkManager,
-    systems::{handle_pending_connections_system, start_listening_system},
+    systems::{handle_client_packets, handle_pending_connections_system, start_listening_system},
 };
 
 pub struct NetworkManagerPlugin;
@@ -13,6 +13,9 @@ impl Plugin for NetworkManagerPlugin {
 
         app.add_systems(PostStartup, start_listening_system);
 
-        app.add_systems(PreUpdate, handle_pending_connections_system);
+        app.add_systems(
+            PreUpdate,
+            (handle_pending_connections_system, handle_client_packets).chain(),
+        );
     }
 }

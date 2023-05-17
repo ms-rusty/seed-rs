@@ -1,54 +1,63 @@
-use bevy::prelude::{Commands, Res};
-use bevy_tokio_runtime::TokioRuntime;
+use std::sync::Arc;
 
-use crate::{
-    network_manager::{
-        events::{Client, ConnectionEvent},
-        resources::{NetworkChannels, NetworkManager},
-    },
-    network_settings::NetworkSettings,
+use bevy::{
+    prelude::{Res, ResMut},
+    utils::Uuid,
+};
+use bevy_tokio_runtime::TokioRuntime;
+use tokio::sync::Mutex;
+
+use crate::network_manager::{
+    events::{Client, ClientId, ConnectionEvent},
+    resources::{NetworkChannels, NetworkManager},
 };
 
 pub fn handle_pending_connections_system(
-    mut commands: Commands,
+    // mut commands: Commands,
     tokio_runtime: Res<TokioRuntime>,
-    network_manager: Res<NetworkManager>,
+    mut network_manager: ResMut<NetworkManager>,
     network_channels: Res<NetworkChannels>,
-    network_settings: Res<NetworkSettings>,
+    // network_settings: Res<NetworkSettings>,
 ) {
     for connection_event in network_channels
         .pending_connection_channel
         .receiver
         .try_iter()
     {
-        if let ConnectionEvent::Success(connection) = connection_event {
-            let (client_sender, client_receiver) = crossbeam_channel::unbounded::<()>();
+        match connection_event {
+            ConnectionEvent::Success(connection) => {
+                let (t, _) = crossbeam_channel::unbounded::<()>();
 
-            let client = Client {};
+                let connection = Arc::new(Mutex::new(connection));
+                let client_id = ClientId(Uuid::new_v4());
+                let client_connection = connection.clone();
 
-            let client_packet_handler = tokio_runtime.spawn_task(async move {
-                loop {
-                    match connection.read_packet().await {
+                let client_packet_handler = tokio_runtime.spawn_task(async move {
+                    loop {
+                        let mut client_connection = client_connection.lock().await;
+                        let Ok(packet) = client_connection.read_packet().await else {
+                            // Error on read packet.
+                            break;
+                        };
+
+                        if let Err(_) = t.send(packet) {
+                            // Error on send read packet.
+                        }
+                    }
+
+                    let mut client_connection = client_connection.lock().await;
+                    match client_connection.shutdown().await {
                         Ok(_) => todo!(),
                         Err(_) => todo!(),
                     }
-                }
-            });
+                });
 
-            let server_packet_handler = tokio_runtime.spawn_task(async move {
-                loop {
-                    match connection.write_packet().await {
-                        Ok(_) => todo!(),
-                        Err(_) => todo!(),
-                    }
-                }
-            });
-
-            network_manager.clients.insert(index, element);
-        }
-
-        if let ConnectionEvent::Failure(err) = connection_event {
-            // Failure on connection.
+                let client = Client::new(connection, client_packet_handler);
+                network_manager.clients.insert(client_id, client);
+            }
+            ConnectionEvent::Failure(_) => {
+                // Failure on connection.
+            }
         }
     }
 }

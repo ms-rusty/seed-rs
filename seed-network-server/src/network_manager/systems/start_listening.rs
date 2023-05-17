@@ -1,4 +1,4 @@
-use bevy::prelude::{Commands, Res, ResMut};
+use bevy::prelude::{Res, ResMut};
 use bevy_tokio_runtime::TokioRuntime;
 use tokio::net::TcpListener;
 
@@ -11,12 +11,14 @@ use crate::{
 };
 
 pub fn start_listening_system(
-    mut commands: Commands,
+    // mut commands: Commands,
     tokio_runtime: Res<TokioRuntime>,
     network_channels: Res<NetworkChannels>,
     mut network_manager: ResMut<NetworkManager>,
     network_settings: Res<NetworkSettings>,
 ) {
+    let use_nagle_algorithm = network_settings.nagle_algorithm;
+
     // let (response_listening_sender, response_listening_receiver) = crossbeam_channel::bounded::<()>(1);
 
     // commands.insert_resource(Listening(response_listening_receiver));
@@ -38,7 +40,7 @@ pub fn start_listening_system(
 
             let connection_event = match connection {
                 Ok((stream, address)) => {
-                    if let Err(err) = stream.set_nodelay(!network_settings.nagle_algorithm) {
+                    if let Err(_) = stream.set_nodelay(!use_nagle_algorithm) {
                         // Could not set nodelay.
                     };
 
@@ -48,7 +50,7 @@ pub fn start_listening_system(
                 Err(err) => ConnectionEvent::Failure(err),
             };
 
-            if let Err(error) = pending_connection_channel_sender.send(connection_event) {
+            if let Err(_) = pending_connection_channel_sender.send(connection_event) {
                 // Error on send connection event: channel
             }
         }
