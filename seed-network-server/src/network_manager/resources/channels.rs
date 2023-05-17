@@ -6,6 +6,7 @@ use crate::network_manager::events::{Connection, ConnectionEvent};
 pub struct NetworkChannels {
     pub pending_connection_channel: NetworkChannel<ConnectionEvent>,
     pub release_connection_channel: NetworkChannel<Connection>,
+    pub pending_client_packet_channel: NetworkChannel<()>,
 }
 
 impl Default for NetworkChannels {

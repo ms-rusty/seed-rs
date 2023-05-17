@@ -1,6 +1,6 @@
 use bevy::utils::Uuid;
-use std::sync::Arc;
-use tokio::{sync::Mutex, task::JoinHandle};
+
+use tokio::task::JoinHandle;
 
 use super::Connection;
 use crate::network_manager::resources::NetworkChannel;
@@ -9,14 +9,14 @@ use crate::network_manager::resources::NetworkChannel;
 pub struct ClientId(pub Uuid);
 
 pub struct Client {
-    pub connection: Arc<Mutex<Connection>>,
+    pub connection: Connection,
     pub client_message_channel: NetworkChannel<()>,
     pub server_message_channel: NetworkChannel<()>,
     pub client_packet_handler: JoinHandle<()>,
 }
 
 impl Client {
-    pub fn new(connection: Arc<Mutex<Connection>>, client_packet_handler: JoinHandle<()>) -> Self {
+    pub fn new(connection: Connection, client_packet_handler: JoinHandle<()>) -> Self {
         let client_message_channel = NetworkChannel::new(crossbeam_channel::unbounded::<()>());
         let server_message_channel = NetworkChannel::new(crossbeam_channel::unbounded::<()>());
 

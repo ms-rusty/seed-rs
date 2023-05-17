@@ -1,7 +1,11 @@
-use std::{error::Error, io::ErrorKind, net::SocketAddr};
+use std::{net::SocketAddr, sync::Arc};
 use tokio::{
-    io::{AsyncReadExt, AsyncWriteExt, BufWriter},
-    net::TcpStream,
+    io::{AsyncReadExt, BufReader, BufWriter},
+    net::{
+        tcp::{OwnedReadHalf, OwnedWriteHalf},
+        TcpStream,
+    },
+    sync::Mutex,
 };
 
 pub enum ConnectionEvent {
@@ -11,14 +15,18 @@ pub enum ConnectionEvent {
 
 pub struct Connection {
     pub address: SocketAddr,
-    pub stream: BufWriter<TcpStream>,
+    pub stream_reader: Arc<Mutex<BufReader<OwnedReadHalf>>>,
+    pub stream_writer: Arc<Mutex<BufWriter<OwnedWriteHalf>>>,
 }
 
 impl Connection {
-    pub fn new(address: SocketAddr, stream: TcpStream) -> Self {
+    pub fn new(address: SocketAddr, mut stream: TcpStream) -> Self {
+        let (a, b) = stream.into_split();
+
         Self {
             address,
-            stream: BufWriter::new(stream),
+            stream_reader: Arc::new(Mutex::new(BufReader::new(a))),
+            stream_writer: Arc::new(Mutex::new(BufWriter::new(b))),
         }
     }
 
@@ -30,7 +38,8 @@ impl Connection {
         let mut position = 0;
 
         loop {
-            let current_byte = self.stream.read_u8().await?;
+            let mut stream_reader = self.stream_reader.lock().await;
+            let current_byte = stream_reader.read_u8().await?;
             value |= (current_byte & SEGMENT_BITS) << position;
 
             if (current_byte & CONTINUE_BIT) == 0 {

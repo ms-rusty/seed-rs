@@ -6,6 +6,7 @@ use bevy::{
 };
 use bevy_tokio_runtime::TokioRuntime;
 use tokio::sync::Mutex;
+use tokio::{io::*, net::TcpStream};
 
 use crate::network_manager::{
     events::{Client, ClientId, ConnectionEvent},
@@ -28,13 +29,11 @@ pub fn handle_pending_connections_system(
             ConnectionEvent::Success(connection) => {
                 let (t, _) = crossbeam_channel::unbounded::<()>();
 
-                let connection = Arc::new(Mutex::new(connection));
-                let client_id = ClientId(Uuid::new_v4());
-                let client_connection = connection.clone();
+                let client_connection_reader = connection.stream_reader.clone();
 
                 let client_packet_handler = tokio_runtime.spawn_task(async move {
                     loop {
-                        let mut client_connection = client_connection.lock().await;
+                        let mut client_connection = client_connection_reader.lock().await;
                         let Ok(packet) = client_connection.read_packet().await else {
                             // Error on read packet.
                             break;
@@ -45,13 +44,14 @@ pub fn handle_pending_connections_system(
                         }
                     }
 
-                    let mut client_connection = client_connection.lock().await;
+                    let mut client_connection = client_connection_reader.lock().await;
                     match client_connection.shutdown().await {
                         Ok(_) => todo!(),
                         Err(_) => todo!(),
                     }
                 });
 
+                let client_id = ClientId(Uuid::new_v4());
                 let client = Client::new(connection, client_packet_handler);
                 network_manager.clients.insert(client_id, client);
             }
