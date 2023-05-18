@@ -1,0 +1,2 @@
+nagle_algorithm = false
+max_packet_length = 0

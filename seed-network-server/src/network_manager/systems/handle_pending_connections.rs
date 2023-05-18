@@ -1,15 +1,12 @@
-use std::sync::Arc;
-
 use bevy::{
     prelude::{Res, ResMut},
     utils::Uuid,
 };
 use bevy_tokio_runtime::TokioRuntime;
-use tokio::sync::Mutex;
 use tokio::{io::*, net::TcpStream};
 
 use crate::network_manager::{
-    events::{Client, ClientId, ConnectionEvent},
+    events::{read_packet, shutdown, write_packet, Client, ClientId, ConnectionEvent},
     resources::{NetworkChannels, NetworkManager},
 };
 
@@ -27,27 +24,33 @@ pub fn handle_pending_connections_system(
     {
         match connection_event {
             ConnectionEvent::Success(connection) => {
-                let (t, _) = crossbeam_channel::unbounded::<()>();
+                let pending_client_packet_channel_sender = network_channels
+                    .pending_client_packet_channel
+                    .sender
+                    .clone();
 
-                let client_connection_reader = connection.stream_reader.clone();
+                let connection_stream_reader = connection.stream.reader.clone();
+                let connection_stream_writer = connection.stream.writer.clone();
 
                 let client_packet_handler = tokio_runtime.spawn_task(async move {
                     loop {
-                        let mut client_connection = client_connection_reader.lock().await;
-                        let Ok(packet) = client_connection.read_packet().await else {
+                        let mut connection_stream_reader = connection_stream_reader.lock().await;
+                        let Ok(packet) = read_packet(&mut connection_stream_reader).await else {
                             // Error on read packet.
+                            println!("Error on read packet.");
                             break;
                         };
 
-                        if let Err(_) = t.send(packet) {
+                        if let Err(_) = pending_client_packet_channel_sender.send(packet) {
                             // Error on send read packet.
+                            println!("Error on send read packet.");
                         }
                     }
 
-                    let mut client_connection = client_connection_reader.lock().await;
-                    match client_connection.shutdown().await {
-                        Ok(_) => todo!(),
-                        Err(_) => todo!(),
+                    let mut connection_stream_writer = connection_stream_writer.lock().await;
+                    match shutdown(&mut connection_stream_writer).await {
+                        Ok(_) => println!("shutdown..."),
+                        Err(_) => println!("error on shutdown..."),
                     }
                 });
 

@@ -6,7 +6,7 @@ use crate::network_manager::events::{Connection, ConnectionEvent};
 pub struct NetworkChannels {
     pub pending_connection_channel: NetworkChannel<ConnectionEvent>,
     pub release_connection_channel: NetworkChannel<Connection>,
-    pub pending_client_packet_channel: NetworkChannel<()>,
+    pub pending_client_packet_channel: NetworkChannel<i32>,
 }
 
 impl Default for NetworkChannels {
@@ -17,9 +17,13 @@ impl Default for NetworkChannels {
         let release_connection_channel =
             NetworkChannel::new(crossbeam_channel::unbounded::<Connection>());
 
+        let pending_client_packet_channel =
+            NetworkChannel::new(crossbeam_channel::unbounded::<i32>());
+
         Self {
             pending_connection_channel,
             release_connection_channel,
+            pending_client_packet_channel,
         }
     }
 }
