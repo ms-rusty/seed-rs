@@ -5,7 +5,7 @@ use tokio::task::JoinHandle;
 use super::Connection;
 use crate::network_manager::resources::NetworkChannel;
 
-#[derive(Hash, PartialEq, Eq)]
+#[derive(Clone, Copy, Hash, PartialEq, Eq)]
 pub struct ClientId(pub Uuid);
 
 pub struct Client {

@@ -17,10 +17,6 @@ pub fn start_listening_system(
     mut network_manager: ResMut<NetworkManager>,
     network_settings: Res<NetworkSettings>,
 ) {
-    if network_manager.listener_handler.is_some() {
-        return;
-    }
-
     let use_nagle_algorithm = network_settings.nagle_algorithm;
 
     // let (response_listening_sender, response_listening_receiver) = crossbeam_channel::bounded::<()>(1);

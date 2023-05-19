@@ -1,5 +1,5 @@
 use bevy::{
-    prelude::{Res, ResMut},
+    prelude::{error, Res, ResMut},
     utils::Uuid,
 };
 use bevy_tokio_runtime::TokioRuntime;
@@ -32,6 +32,8 @@ pub fn handle_pending_connections_system(
                 let connection_stream_reader = connection.stream.reader.clone();
                 let connection_stream_writer = connection.stream.writer.clone();
 
+                let client_id = ClientId(Uuid::new_v4());
+
                 let client_packet_handler = tokio_runtime.spawn_task(async move {
                     loop {
                         let mut connection_stream_reader = connection_stream_reader.lock().await;
@@ -41,7 +43,9 @@ pub fn handle_pending_connections_system(
                             break;
                         };
 
-                        if let Err(_) = pending_client_packet_channel_sender.send(packet) {
+                        if let Err(_) =
+                            pending_client_packet_channel_sender.send((client_id, packet))
+                        {
                             // Error on send read packet.
                             println!("Error on send read packet.");
                         }
@@ -54,7 +58,6 @@ pub fn handle_pending_connections_system(
                     }
                 });
 
-                let client_id = ClientId(Uuid::new_v4());
                 let client = Client::new(connection, client_packet_handler);
                 network_manager.clients.insert(client_id, client);
             }

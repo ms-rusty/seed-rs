@@ -1,12 +1,15 @@
 use bevy::prelude::Resource;
 
-use crate::network_manager::events::{Connection, ConnectionEvent};
+use crate::{
+    network::Packet,
+    network_manager::events::{ClientId, Connection, ConnectionEvent},
+};
 
 #[derive(Resource)]
 pub struct NetworkChannels {
     pub pending_connection_channel: NetworkChannel<ConnectionEvent>,
     pub release_connection_channel: NetworkChannel<Connection>,
-    pub pending_client_packet_channel: NetworkChannel<i32>,
+    pub pending_client_packet_channel: NetworkChannel<(ClientId, Packet)>,
 }
 
 impl Default for NetworkChannels {
@@ -18,7 +21,7 @@ impl Default for NetworkChannels {
             NetworkChannel::new(crossbeam_channel::unbounded::<Connection>());
 
         let pending_client_packet_channel =
-            NetworkChannel::new(crossbeam_channel::unbounded::<i32>());
+            NetworkChannel::new(crossbeam_channel::unbounded::<(ClientId, Packet)>());
 
         Self {
             pending_connection_channel,

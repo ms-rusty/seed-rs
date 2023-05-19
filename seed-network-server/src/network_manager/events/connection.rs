@@ -1,3 +1,4 @@
+use bytes::BytesMut;
 use std::{net::SocketAddr, sync::Arc};
 use tokio::{
     io::*,
@@ -8,6 +9,8 @@ use tokio::{
     sync::Mutex,
 };
 
+use crate::network::Packet;
+
 pub enum ConnectionEvent {
     Success(Connection),
     Failure(std::io::Error),
@@ -16,6 +19,7 @@ pub enum ConnectionEvent {
 pub struct Connection {
     pub address: SocketAddr,
     pub stream: ConnectionStream,
+    pub state: ConnectionState,
 }
 
 impl Connection {
@@ -23,6 +27,7 @@ impl Connection {
         Self {
             address,
             stream: ConnectionStream::new(stream),
+            state: ConnectionState::Handshaking,
         }
     }
 }
@@ -45,55 +50,25 @@ impl ConnectionStream {
     }
 }
 
-pub async fn read_packet(reader: &mut BufReader<OwnedReadHalf>) -> Result<i32> {
-    let packet_lenght = get_varint(reader).await?;
-    println!("packet_lenght: {packet_lenght}");
-
-    let packet_id = get_varint(reader).await?;
-    println!("packet_id: {:?}", packet_id);
-
-    let protocol_version = get_varint(reader).await?;
-    println!("protocol_version: {:?}", protocol_version);
-
-    let length_server_address = get_varint(reader).await? as usize;
-    println!("length_server_address: {:?}", length_server_address);
-    let mut server_address = vec![0u8; length_server_address];
-    reader.read_exact(&mut server_address).await?;
-    println!(
-        "server_address: {:?}",
-        std::str::from_utf8(&server_address).unwrap()
-    );
-
-    let server_port = reader.read_u16().await?;
-    println!("server_port: {:?}", server_port);
-
-    let next_state = get_varint(reader).await?;
-    println!("next_state: {:?}", next_state);
-
-    Ok(packet_id)
+#[derive(PartialEq, Eq)]
+pub enum ConnectionState {
+    Handshaking,
+    Status,
+    Login,
+    Play,
 }
 
-async fn get_varint(reader: &mut BufReader<OwnedReadHalf>) -> Result<i32> {
-    let mut num_read = 0;
-    let mut result = 0;
-    loop {
-        let read = reader.read_u8().await?;
-        let value = i32::from(read & 0b0111_1111);
-        result |= value.overflowing_shl(7 * num_read).0;
+pub async fn read_packet(
+    reader: &mut BufReader<OwnedReadHalf>,
+) -> anyhow::Result<Packet, anyhow::Error> {
+    let mut buffer = BytesMut::with_capacity(4 * 1024);
+    reader.read_buf(&mut buffer).await?;
 
-        num_read += 1;
-
-        if num_read > 5 {
-            return Err(std::io::Error::new(
-                ErrorKind::InvalidData,
-                "VarInt too long (max length: 5)",
-            ));
-        }
-        if read & 0b1000_0000 == 0 {
-            break;
-        }
+    if buffer.is_empty() {
+        return Err(anyhow::anyhow!("buffer empty!"));
     }
-    Ok(result)
+
+    Ok(Packet::new(buffer))
 }
 
 pub async fn write_packet(writer: &mut BufReader<OwnedReadHalf>) -> Result<()> {

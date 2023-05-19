@@ -1,5 +1,6 @@
 use bevy::{
     app::ScheduleRunnerPlugin,
+    log::LogPlugin,
     prelude::{App, FrameCountPlugin, TaskPoolOptions, TaskPoolPlugin, TypeRegistrationPlugin},
     time::TimePlugin,
 };
@@ -26,9 +27,10 @@ fn main() {
     app.add_plugin(TimePlugin::default());
     app.add_plugin(ScheduleRunnerPlugin {
         run_mode: bevy::app::RunMode::Loop {
-            wait: Some(std::time::Duration::from_secs_f64(1.0 / 2.0)),
+            wait: Some(std::time::Duration::from_secs_f64(1.0 / 1.0)),
         },
     });
+    app.add_plugin(LogPlugin::default());
 
     // Add seed plugins.
     app.add_plugin(SeedPlugin);

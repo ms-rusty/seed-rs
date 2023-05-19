@@ -1,4 +1,6 @@
-use bevy::prelude::{App, IntoSystemConfigs, Plugin, PostStartup, PreUpdate, Res, ResMut};
+use bevy::prelude::{
+    App, IntoSystemConfigs, Plugin, PostStartup, PreStartup, PreUpdate, Res, ResMut, Startup,
+};
 use bevy_tokio_runtime::TokioRuntime;
 use tokio::runtime::Builder;
 
@@ -15,9 +17,9 @@ impl Plugin for NetworkManagerPlugin {
         app.init_resource::<NetworkChannels>();
 
         app.add_systems(
-            PostStartup,
+            Startup,
             (configure_tokio_runtime_system, start_listening_system).chain(),
-        ); // PostStartup
+        );
 
         app.add_systems(
             PreUpdate,

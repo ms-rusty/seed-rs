@@ -1,26 +1,26 @@
 use std::{fs::File, io::Read};
 
-use bevy::prelude::Commands;
+use bevy::prelude::{info, Commands};
 
 use crate::network_settings::resources::NetworkSettings;
 
 use super::NETWORK_SETTINGS_PATH;
 
-pub fn load_settings_system(mut commands: Commands) {
-    let mut file = match File::open(NETWORK_SETTINGS_PATH) {
-        Ok(file) => file,
-        Err(_) => panic!("Error on open network settings."),
-    };
+pub fn load_settings_system(mut commands: Commands) -> Result<(), anyhow::Error> {
+    info!("Iniciando o sistema para carregar o arquivo settings.");
+
+    let mut file = File::open(NETWORK_SETTINGS_PATH)?;
 
     let mut content = String::new();
-    if let Err(_) = file.read_to_string(&mut content) {
-        panic!("Error on read content from network settings.");
-    };
+    file.read_to_string(&mut content)?;
 
-    let network_settings = match toml::from_str::<NetworkSettings>(&content) {
-        Ok(settings) => settings,
-        Err(_) => panic!("Error on deserialie network settings."),
-    };
+    info!("Arquivo settings carregado com sucesso.");
+
+    let network_settings = toml::from_str::<NetworkSettings>(&content)?;
 
     commands.insert_resource(network_settings);
+
+    info!("Recurso settings criado com sucesso.");
+
+    Ok(())
 }
