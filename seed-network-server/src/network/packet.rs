@@ -1,6 +1,8 @@
 use bytes::{Buf, Bytes, BytesMut};
 use std::io::Cursor;
 
+use super::VarInt;
+
 // https://wiki.vg/Protocol#Packet_format
 pub struct Packet {
     pub length: i32,
@@ -11,16 +13,16 @@ pub struct Packet {
 impl Packet {
     pub fn new(mut data: BytesMut) -> Self {
         let mut reader = PacketReader::new(&data);
-        let (packet_length, packet_varint_length) = reader.read_var_int();
-        let (packet_command, command_varint_length) = reader.read_var_int();
+        let packet_length_var_int = reader.read_var_int();
+        let packet_command_var_int = reader.read_var_int();
 
         let data: Bytes = data
-            .split_off(packet_varint_length + command_varint_length)
+            .split_off(packet_length_var_int.length + packet_command_var_int.length)
             .freeze();
 
         Self {
-            length: packet_length,
-            command: packet_command,
+            length: packet_length_var_int.value,
+            command: packet_command_var_int.value,
             data,
         }
     }
@@ -53,7 +55,7 @@ impl<'packet> PacketReader<'packet> {
         self.cursor.get_u16()
     }
 
-    pub fn read_var_int(&mut self) -> (i32, usize) {
+    pub fn read_var_int(&mut self) -> VarInt {
         let mut length = 0;
         let mut value = 0;
 
@@ -72,14 +74,14 @@ impl<'packet> PacketReader<'packet> {
             }
         }
 
-        (value, length as usize)
+        VarInt::new(value, length as usize)
     }
 
     pub fn read_str(&mut self) -> &'packet str {
-        let (length, _) = self.read_var_int();
+        let var_int = self.read_var_int();
 
         let start = self.cursor.position() as usize;
-        let end = start + length as usize;
+        let end = start + var_int.value as usize;
         self.cursor.set_position(end as u64);
         let value = &self.cursor.get_ref()[start..end];
 
