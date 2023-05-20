@@ -50,7 +50,7 @@ impl ConnectionStream {
     }
 }
 
-#[derive(PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum ConnectionState {
     Handshaking,
     Status,
@@ -68,7 +68,7 @@ pub async fn read_packet(
         return Err(anyhow::anyhow!("buffer empty!"));
     }
 
-    Ok(Packet::new(buffer))
+    Ok(Packet::new(buffer)?)
 }
 
 pub async fn write_packet(writer: &mut BufReader<OwnedReadHalf>) -> Result<()> {

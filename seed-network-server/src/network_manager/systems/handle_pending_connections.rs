@@ -3,10 +3,9 @@ use bevy::{
     utils::Uuid,
 };
 use bevy_tokio_runtime::TokioRuntime;
-use tokio::{io::*, net::TcpStream};
 
 use crate::network_manager::{
-    events::{read_packet, shutdown, write_packet, Client, ClientId, ConnectionEvent},
+    events::{read_packet, shutdown, Client, ClientId, ConnectionEvent},
     resources::{NetworkChannels, NetworkManager},
 };
 
@@ -37,10 +36,13 @@ pub fn handle_pending_connections_system(
                 let client_packet_handler = tokio_runtime.spawn_task(async move {
                     loop {
                         let mut connection_stream_reader = connection_stream_reader.lock().await;
-                        let Ok(packet) = read_packet(&mut connection_stream_reader).await else {
-                            // Error on read packet.
-                            println!("Error on read packet.");
-                            break;
+                        let packet = match read_packet(&mut connection_stream_reader).await {
+                            Ok(packet) => packet,
+                            Err(err) => {
+                                // Error on read packet.
+                                error!("Error on read packet. {}", err);
+                                break;
+                            }
                         };
 
                         if let Err(_) =
@@ -54,7 +56,7 @@ pub fn handle_pending_connections_system(
                     let mut connection_stream_writer = connection_stream_writer.lock().await;
                     match shutdown(&mut connection_stream_writer).await {
                         Ok(_) => println!("shutdown..."),
-                        Err(_) => println!("error on shutdown..."),
+                        Err(err) => println!("error on shutdown... {}", err),
                     }
                 });
 

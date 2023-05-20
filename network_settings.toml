@@ -1,2 +1,4 @@
-nagle_algorithm = false
+server_address = "127.0.0.1:25565"
 max_packet_length = 0
+use_nagle_algorithm = false
+runtime_threads = 2

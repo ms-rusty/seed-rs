@@ -1,8 +1,8 @@
-use bevy::prelude::{
-    App, IntoSystemConfigs, Plugin, PostStartup, PreStartup, PreUpdate, Res, ResMut, Startup,
-};
+use bevy::prelude::{App, IntoSystemConfigs, Plugin, PreUpdate, Res, ResMut, Startup};
 use bevy_tokio_runtime::TokioRuntime;
 use tokio::runtime::Builder;
+
+use crate::network_settings::{self, NetworkSettings};
 
 use super::{
     resources::{NetworkChannels, NetworkManager},
@@ -28,11 +28,16 @@ impl Plugin for NetworkManagerPlugin {
     }
 }
 
-fn configure_tokio_runtime_system(mut tokio_runtime: ResMut<TokioRuntime>) {
+fn configure_tokio_runtime_system(
+    mut tokio_runtime: ResMut<TokioRuntime>,
+    network_settings: Res<NetworkSettings>,
+) {
+    let runtime_threads = network_settings.runtime_threads;
+
     let runtime = Builder::new_multi_thread()
         .enable_io()
         .enable_time()
-        .worker_threads(2)
+        .worker_threads(runtime_threads)
         .build()
         .expect("Error on build Tokio Runtime.");
 

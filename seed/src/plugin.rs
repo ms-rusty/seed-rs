@@ -1,10 +1,4 @@
-use bevy::{
-    app::RunFixedUpdateLoop,
-    prelude::{
-        App, First, FixedUpdate, Last, NextState, OnEnter, Plugin, PostStartup, PostUpdate,
-        PreStartup, PreUpdate, ResMut, Startup, StateTransition, Update,
-    },
-};
+use bevy::prelude::{App, NextState, OnEnter, Plugin, ResMut};
 use seed_common::AppState;
 
 pub struct SeedPlugin;

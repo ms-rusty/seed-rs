@@ -1,10 +1,6 @@
-use std::{
-    fs::File,
-    io::{ErrorKind, Write},
-    path::Path,
-};
+use std::{fs::File, io::Write, path::Path};
 
-use bevy::prelude::{debug, error, info, trace, warn};
+use bevy::prelude::info;
 
 use crate::network_settings::resources::NetworkSettings;
 

@@ -27,7 +27,7 @@ fn main() {
     app.add_plugin(TimePlugin::default());
     app.add_plugin(ScheduleRunnerPlugin {
         run_mode: bevy::app::RunMode::Loop {
-            wait: Some(std::time::Duration::from_secs_f64(1.0 / 1.0)),
+            wait: Some(std::time::Duration::from_secs_f64(1.0 / 60.0)),
         },
     });
     app.add_plugin(LogPlugin::default());

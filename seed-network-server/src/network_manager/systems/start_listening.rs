@@ -17,7 +17,8 @@ pub fn start_listening_system(
     mut network_manager: ResMut<NetworkManager>,
     network_settings: Res<NetworkSettings>,
 ) {
-    let use_nagle_algorithm = network_settings.nagle_algorithm;
+    let use_nagle_algorithm = network_settings.use_nagle_algorithm;
+    let server_address = network_settings.server_address;
 
     // let (response_listening_sender, response_listening_receiver) = crossbeam_channel::bounded::<()>(1);
 
@@ -27,7 +28,7 @@ pub fn start_listening_system(
         network_channels.pending_connection_channel.sender.clone();
 
     network_manager.listener_handler = Some(tokio_runtime.spawn_task(async move {
-        let listener = TcpListener::bind("127.0.0.1:65535").await;
+        let listener = TcpListener::bind(server_address).await;
         let listener = match listener {
             Ok(listener) => listener,
             Err(err) => panic!("Error on bind Tokio TcpListener. {:?}", err),

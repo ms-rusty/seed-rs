@@ -23,4 +23,6 @@ pub enum ClientLoginPackets {
 
 // https://wiki.vg/Protocol#Play
 #[derive(FromPrimitive)]
-pub enum ServerPlayPackets {}
+pub enum ServerPlayPackets {
+    //
+}
