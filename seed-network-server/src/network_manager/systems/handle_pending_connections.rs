@@ -5,7 +5,8 @@ use bevy::{
 use bevy_tokio_runtime::TokioRuntime;
 
 use crate::network_manager::{
-    events::{read_packet, shutdown, Client, ClientId, ConnectionEvent},
+    events::{shutdown, Client, ClientId, ConnectionEvent},
+    packets::read_packet,
     resources::{NetworkChannels, NetworkManager},
 };
 

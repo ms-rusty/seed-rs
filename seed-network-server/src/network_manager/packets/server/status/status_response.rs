@@ -1,4 +1,4 @@
-pub struct PacketServerStatusResponse<'packet> {
+pub struct ServerStatusResponsePacket<'packet> {
     pub version: ServerVersion<'packet>,
     pub players: ServerPlayers,
     pub description: ServerDescription,

@@ -1,16 +1,14 @@
-use bevy::prelude::{Res, ResMut};
+use bevy::prelude::{info, Res, ResMut};
 use bevy_tokio_runtime::TokioRuntime;
 use num_traits::FromPrimitive;
 
-use crate::{
-    network::{
-        ClientHandshakingPackets, ClientStatusPackets, HandshakeState, Packet,
-        PacketClientHandshake, PacketClientStatusRequest,
+use crate::network_manager::{
+    events::{Client, ConnectionState},
+    packets::{
+        ClientHandshakePacket, ClientHandshakingPackets, ClientStatusPackets,
+        ClientStatusRequestPacket, NextState, Packet,
     },
-    network_manager::{
-        events::{Client, ConnectionState},
-        resources::{NetworkChannels, NetworkManager},
-    },
+    resources::{NetworkChannels, NetworkManager},
 };
 
 pub fn handle_client_packets(
@@ -40,13 +38,14 @@ fn handle_client_handshaking_packets(
     client: &mut Client,
     packet: &Packet,
 ) -> Result<(), anyhow::Error> {
-    match FromPrimitive::from_i32(packet.command) {
+    match FromPrimitive::from_i32(packet.id.value) {
         Some(ClientHandshakingPackets::Handshake) => {
-            let request = PacketClientHandshake::try_from(packet)?;
+            let request = ClientHandshakePacket::try_from(packet)?;
+            info!(target: "systems", "{:?}", request);
 
             let next_state = match request.next_state {
-                HandshakeState::Status => ConnectionState::Status,
-                HandshakeState::Login => ConnectionState::Login,
+                NextState::Status => ConnectionState::Status,
+                NextState::Login => ConnectionState::Login,
             };
             client.connection.state = next_state;
         }
@@ -57,9 +56,10 @@ fn handle_client_handshaking_packets(
 }
 
 fn handle_client_status_packets(packet: &Packet) -> Result<(), anyhow::Error> {
-    match FromPrimitive::from_i32(packet.command) {
+    match FromPrimitive::from_i32(packet.id.value) {
         Some(ClientStatusPackets::StatusRequest) => {
-            let request = PacketClientStatusRequest::try_from(packet)?;
+            let request = ClientStatusRequestPacket::try_from(packet)?;
+            info!(target: "systems", "{:?}", request);
         }
         _ => {}
     }

@@ -1,7 +1,5 @@
 pub use client::{Client, ClientId};
-pub use connection::{
-    read_packet, shutdown, write_packet, Connection, ConnectionEvent, ConnectionState,
-};
+pub use connection::{shutdown, Connection, ConnectionEvent, ConnectionState};
 
 mod client;
 mod connection;

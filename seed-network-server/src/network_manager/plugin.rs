@@ -2,7 +2,7 @@ use bevy::prelude::{App, IntoSystemConfigs, Plugin, PreUpdate, Res, ResMut, Star
 use bevy_tokio_runtime::TokioRuntime;
 use tokio::runtime::Builder;
 
-use crate::network_settings::{self, NetworkSettings};
+use crate::network_settings::NetworkSettings;
 
 use super::{
     resources::{NetworkChannels, NetworkManager},

@@ -1,8 +1,8 @@
 use bytes::Buf;
+use seed_network_common::{VarInt, VarLong};
 use std::io::Cursor;
-use thiserror::Error;
 
-use super::{packet::PacketError, Packet, VarInt, VarLong};
+use super::{packet_errors::PacketReaderError, Packet};
 
 pub struct PacketReader<'packet> {
     pub cursor: Cursor<&'packet [u8]>,
@@ -16,6 +16,7 @@ impl<'packet> From<&'packet Packet> for PacketReader<'packet> {
     }
 }
 
+#[allow(dead_code)]
 impl<'packet> PacketReader<'packet> {
     pub fn new(data: &'packet [u8]) -> Self {
         Self {
@@ -265,16 +266,4 @@ impl<'packet> PacketReader<'packet> {
             Err(_) => Err(PacketReaderError::NotEnoughRemainingData),
         }
     }
-}
-
-#[derive(Debug, Error)]
-pub enum PacketReaderError {
-    #[error("Not enough remaining data.")]
-    NotEnoughRemainingData,
-
-    #[error("VarInt is too big.")]
-    VarIntTooBig,
-
-    #[error("VarLong is too big.")]
-    VarLongTooBig,
 }

@@ -1,4 +1,3 @@
-use bytes::BytesMut;
 use std::{net::SocketAddr, sync::Arc};
 use tokio::{
     io::*,
@@ -8,8 +7,6 @@ use tokio::{
     },
     sync::Mutex,
 };
-
-use crate::network::Packet;
 
 pub enum ConnectionEvent {
     Success(Connection),
@@ -56,23 +53,6 @@ pub enum ConnectionState {
     Status,
     Login,
     Play,
-}
-
-pub async fn read_packet(
-    reader: &mut BufReader<OwnedReadHalf>,
-) -> anyhow::Result<Packet, anyhow::Error> {
-    let mut buffer = BytesMut::with_capacity(4 * 1024);
-    reader.read_buf(&mut buffer).await?;
-
-    if buffer.is_empty() {
-        return Err(anyhow::anyhow!("buffer empty!"));
-    }
-
-    Ok(Packet::new(buffer)?)
-}
-
-pub async fn write_packet(writer: &mut BufReader<OwnedReadHalf>) -> Result<()> {
-    Ok(())
 }
 
 pub async fn shutdown(writer: &mut BufWriter<OwnedWriteHalf>) -> Result<()> {

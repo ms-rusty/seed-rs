@@ -1,8 +1,8 @@
 use bevy::prelude::Resource;
 
-use crate::{
-    network::Packet,
-    network_manager::events::{ClientId, Connection, ConnectionEvent},
+use crate::network_manager::{
+    events::{ClientId, Connection, ConnectionEvent},
+    packets::Packet,
 };
 
 #[derive(Resource)]
