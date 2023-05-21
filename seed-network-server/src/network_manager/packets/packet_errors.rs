@@ -5,10 +5,10 @@ pub enum PacketError {
     #[error("Invalid packet.")]
     InvalidPacket,
 
-    #[error("Read error.")]
+    #[error("Read error. {0}")]
     ReadError(PacketReaderError),
 
-    #[error("Write error.")]
+    #[error("Write error. {0}")]
     WriteError(PacketWriterError),
 }
 

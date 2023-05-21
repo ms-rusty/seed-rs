@@ -9,6 +9,7 @@ use tokio::{
 use super::{packet_reader::PacketReader, packet_writer::PacketWriter};
 
 // https://wiki.vg/Protocol#Packet_format
+#[derive(Debug)]
 pub struct Packet {
     pub id: VarInt,
     pub data: Bytes,

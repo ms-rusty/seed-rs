@@ -92,6 +92,10 @@ impl PacketWriter {
         self.data.put_u128_le(value);
     }
 
+    pub fn write_bool(&mut self, value: bool) {
+        self.data.put_u8(value as u8);
+    }
+
     pub fn write_var_int(&mut self, mut value: i32) -> usize {
         let mut position = 0;
 

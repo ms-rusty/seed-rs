@@ -1,6 +1,7 @@
 pub use client::{
-    ClientHandshakePacket, ClientHandshakingPackets, ClientLoginPackets, ClientStatusPackets,
-    ClientStatusRequestPacket, NextState, ServerPlayPackets,
+    ClientHandshakePacket, ClientHandshakingPackets, ClientLoginPackets, ClientLoginStartPacket,
+    ClientPingRequestPacket, ClientStatusPackets, ClientStatusRequestPacket, NextState,
+    ServerPlayPackets,
 };
 pub use packet::{read_packet, write_packet, Packet};
 

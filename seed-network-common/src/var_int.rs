@@ -18,9 +18,9 @@ impl From<i32> for VarInt {
             // let mut byte = (value & 0x7F) as u8;
             value >>= 7;
 
-            if value != 0 {
-                // byte |= 0x80;
-            }
+            // if value != 0 {
+            // byte |= 0x80;
+            // }
 
             position += 1;
 

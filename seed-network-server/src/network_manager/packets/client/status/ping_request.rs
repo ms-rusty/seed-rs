@@ -16,7 +16,7 @@ impl TryFrom<&Packet> for ClientPingRequestPacket {
         }
 
         let mut reader = PacketReader::from(packet);
-        let payload = reader.read_i64()?;
+        let payload = reader.read_int(reader.remaining())?;
 
         Ok(Self { payload })
     }

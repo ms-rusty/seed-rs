@@ -1,11 +1,13 @@
-use bevy::prelude::{info, Res, ResMut};
+use bevy::prelude::{info, EventWriter, Res, ResMut};
 use bevy_tokio_runtime::TokioRuntime;
 use num_traits::FromPrimitive;
+use seed_network_common::ClientHandshakingEvent;
 
 use crate::network_manager::{
     events::{Client, ConnectionState},
     packets::{
-        ClientHandshakePacket, ClientHandshakingPackets, ClientStatusPackets,
+        ClientHandshakePacket, ClientHandshakingPackets, ClientLoginPackets,
+        ClientLoginStartPacket, ClientPingRequestPacket, ClientStatusPackets,
         ClientStatusRequestPacket, NextState, Packet,
     },
     resources::{NetworkChannels, NetworkManager},
@@ -15,6 +17,7 @@ pub fn handle_client_packets(
     network_channels: Res<NetworkChannels>,
     tokio_runtime: Res<TokioRuntime>,
     mut network_manager: ResMut<NetworkManager>,
+    mut client_handshaking_event: EventWriter<ClientHandshakingEvent>,
 ) {
     for (client_id, packet) in network_channels
         .pending_client_packet_channel
@@ -43,11 +46,22 @@ fn handle_client_handshaking_packets(
             let request = ClientHandshakePacket::try_from(packet)?;
             info!(target: "systems", "{:?}", request);
 
-            let next_state = match request.next_state {
-                NextState::Status => ConnectionState::Status,
-                NextState::Login => ConnectionState::Login,
-            };
-            client.connection.state = next_state;
+            match request.next_state {
+                NextState::Status(next_packet) => {
+                    client.connection.state = ConnectionState::Status;
+
+                    if let Some(next_packet) = next_packet {
+                        let request = ClientStatusRequestPacket::try_from(&next_packet)?;
+                        info!(target: "systems", "{:?}", request);
+                    }
+                }
+                NextState::Login(next_packet) => {
+                    client.connection.state = ConnectionState::Login;
+
+                    let request = ClientLoginStartPacket::try_from(&next_packet)?;
+                    info!(target: "systems", "{:?}", request);
+                }
+            }
         }
         _ => {}
     }
@@ -57,16 +71,23 @@ fn handle_client_handshaking_packets(
 
 fn handle_client_status_packets(packet: &Packet) -> Result<(), anyhow::Error> {
     match FromPrimitive::from_i32(packet.id.value) {
-        Some(ClientStatusPackets::StatusRequest) => {
-            let request = ClientStatusRequestPacket::try_from(packet)?;
+        Some(ClientStatusPackets::PingRequest) => {
+            let request = ClientPingRequestPacket::try_from(packet)?;
             info!(target: "systems", "{:?}", request);
         }
-        _ => {}
+        _ => println!("handle_client_status_packets: pacote estranho."),
     }
     Ok(())
 }
 
 fn handle_client_login_packets(packet: &Packet) -> Result<(), anyhow::Error> {
+    match FromPrimitive::from_i32(packet.id.value) {
+        Some(ClientLoginPackets::EncryptionResponse) => {
+            println!("EncryptionResponse.");
+        }
+        _ => println!("handle_client_login_packets: pacote estranho."),
+    }
+
     Ok(())
 }
 
