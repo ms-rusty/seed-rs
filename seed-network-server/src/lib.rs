@@ -6,3 +6,4 @@ mod network_message_manager;
 mod network_packet_manager;
 mod network_settings;
 mod plugins;
+mod shared;
