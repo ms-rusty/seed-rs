@@ -45,8 +45,7 @@ pub fn start_listening_system(
                         // Could not set nodelay.
                     };
 
-                    let connection = Connection::new(address, stream);
-                    ConnectionEvent::Success(connection)
+                    ConnectionEvent::Success((stream, address))
                 }
                 Err(err) => ConnectionEvent::Failure(err),
             };

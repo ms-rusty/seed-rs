@@ -1,4 +1,4 @@
-use bevy::prelude::{App, IntoSystemConfigs, Plugin, PreUpdate, Res, ResMut, Startup};
+use bevy::prelude::{App, First, IntoSystemConfigs, Plugin, PreUpdate, Res, ResMut, Startup};
 use bevy_tokio_runtime::TokioRuntime;
 use tokio::runtime::Builder;
 
@@ -6,7 +6,10 @@ use crate::network_settings::NetworkSettings;
 
 use super::{
     resources::{NetworkChannels, NetworkManager},
-    systems::{handle_client_packets, handle_pending_connections_system, start_listening_system},
+    systems::{
+        create_packet_handlers_system, handle_client_packets, handle_connection_event_system,
+        start_listening_system,
+    },
 };
 
 pub struct NetworkManagerPlugin;
@@ -22,9 +25,14 @@ impl Plugin for NetworkManagerPlugin {
         );
 
         app.add_systems(
-            PreUpdate,
-            (handle_pending_connections_system, handle_client_packets).chain(),
+            First,
+            (
+                handle_connection_event_system,
+                create_packet_handlers_system,
+            )
+                .chain(),
         );
+        app.add_systems(PreUpdate, (handle_client_packets).chain());
     }
 }
 

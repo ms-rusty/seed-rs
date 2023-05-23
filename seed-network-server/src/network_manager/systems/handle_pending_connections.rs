@@ -1,21 +1,25 @@
 use bevy::{
-    prelude::{error, Res, ResMut},
+    prelude::{
+        error, Commands, DespawnRecursiveExt, Entity, EventReader, EventWriter, Query, Res, ResMut,
+        With, Without,
+    },
     utils::Uuid,
 };
 use bevy_tokio_runtime::TokioRuntime;
 
 use crate::network_manager::{
-    events::{shutdown, Client, ClientId, ConnectionEvent},
+    events::{
+        shutdown, Client, ClientId, Connection, ConnectionBundle, ConnectionEvent,
+        ConnectionHandshakingState, ConnectionSocketAddr, ConnectionStreamReader,
+        ConnectionStreamWriter, PacketHandler,
+    },
     packets::read_packet,
     resources::{NetworkChannels, NetworkManager},
 };
 
-pub fn handle_pending_connections_system(
-    // mut commands: Commands,
-    tokio_runtime: Res<TokioRuntime>,
-    mut network_manager: ResMut<NetworkManager>,
+pub fn handle_connection_event_system(
+    mut commands: Commands,
     network_channels: Res<NetworkChannels>,
-    // network_settings: Res<NetworkSettings>,
 ) {
     for connection_event in network_channels
         .pending_connection_channel
@@ -23,50 +27,59 @@ pub fn handle_pending_connections_system(
         .try_iter()
     {
         match connection_event {
-            ConnectionEvent::Success(connection) => {
-                let pending_client_packet_channel_sender = network_channels
-                    .pending_client_packet_channel
-                    .sender
-                    .clone();
+            ConnectionEvent::Success((stream, address)) => {
+                let (read, write) = stream.into_split();
 
-                let connection_stream_reader = connection.stream.reader.clone();
-                let connection_stream_writer = connection.stream.writer.clone();
-
-                let client_id = ClientId(Uuid::new_v4());
-
-                let client_packet_handler = tokio_runtime.spawn_task(async move {
-                    loop {
-                        let mut connection_stream_reader = connection_stream_reader.lock().await;
-                        let packet = match read_packet(&mut connection_stream_reader).await {
-                            Ok(packet) => packet,
-                            Err(err) => {
-                                // Error on read packet.
-                                error!("Error on read packet. {}", err);
-                                break;
-                            }
-                        };
-
-                        if let Err(_) =
-                            pending_client_packet_channel_sender.send((client_id, packet))
-                        {
-                            // Error on send read packet.
-                            println!("Error on send read packet.");
-                        }
-                    }
-
-                    let mut connection_stream_writer = connection_stream_writer.lock().await;
-                    match shutdown(&mut connection_stream_writer).await {
-                        Ok(_) => println!("shutdown..."),
-                        Err(err) => println!("error on shutdown... {}", err),
-                    }
-                });
-
-                let client = Client::new(connection, client_packet_handler);
-                network_manager.clients.insert(client_id, client);
+                commands.spawn((
+                    ConnectionBundle {
+                        connection: Connection,
+                        stream_reader: ConnectionStreamReader::new(read),
+                        stream_writer: ConnectionStreamWriter::new(write),
+                        address: ConnectionSocketAddr::new(address),
+                    },
+                    ConnectionHandshakingState,
+                ));
             }
-            ConnectionEvent::Failure(_) => {
-                // Failure on connection.
-            }
+            ConnectionEvent::Failure(_) => {}
         }
+    }
+}
+
+pub fn create_packet_handlers_system(
+    mut commands: Commands,
+    tokio_runtime: Res<TokioRuntime>,
+    network_channels: Res<NetworkChannels>,
+    connection_query: Query<(Entity, &ConnectionStreamReader), Without<PacketHandler>>,
+) {
+    for (entity, stream_reader) in connection_query.iter() {
+        let pending_client_packet_channel_sender = network_channels
+            .pending_client_packet_channel
+            .sender
+            .clone();
+
+        let stream_reader = stream_reader.reader.clone();
+
+        let packet_handler = tokio_runtime.spawn_task(async move {
+            loop {
+                let mut stream_reader = stream_reader.lock().await;
+                let packet = match read_packet(&mut stream_reader).await {
+                    Ok(packet) => packet,
+                    Err(err) => {
+                        // Error on read packet.
+                        error!("Error on read packet. {}", err);
+                        break;
+                    }
+                };
+
+                if let Err(_) = pending_client_packet_channel_sender.send((entity, packet)) {
+                    // Error on send read packet.
+                    println!("Error on send read packet.");
+                }
+            }
+        });
+
+        commands
+            .entity(entity)
+            .insert(PacketHandler::new(packet_handler));
     }
 }

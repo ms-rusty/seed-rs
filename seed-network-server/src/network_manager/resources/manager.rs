@@ -8,7 +8,6 @@ use crate::network_manager::events::{Client, ClientId};
 #[derive(Resource, Default)]
 pub struct NetworkManager {
     pub listener_handler: Option<JoinHandle<()>>,
-    pub clients: HashMap<ClientId, Client>,
 }
 
 impl NetworkManager {

@@ -1,10 +1,13 @@
-use bevy::prelude::{info, EventWriter, Res, ResMut};
+use bevy::prelude::{info, Commands, Entity, EventWriter, Query, Res, ResMut, With};
 use bevy_tokio_runtime::TokioRuntime;
 use num_traits::FromPrimitive;
-use seed_network_common::ClientHandshakingEvent;
+
 
 use crate::network_manager::{
-    events::{Client, ConnectionState},
+    events::{
+        Client, ClientId, Connection, ConnectionHandshakingState, ConnectionLoginState,
+        ConnectionState, ConnectionStatusState, PacketHandler,
+    },
     packets::{
         ClientHandshakePacket, ClientHandshakingPackets, ClientLoginPackets,
         ClientLoginStartPacket, ClientPingRequestPacket, ClientStatusPackets,
@@ -14,31 +17,45 @@ use crate::network_manager::{
 };
 
 pub fn handle_client_packets(
+    mut commands: Commands,
     network_channels: Res<NetworkChannels>,
-    tokio_runtime: Res<TokioRuntime>,
-    mut network_manager: ResMut<NetworkManager>,
-    mut client_handshaking_event: EventWriter<ClientHandshakingEvent>,
+    handshaking_clients_query: Query<
+        Entity,
+        (With<ConnectionHandshakingState>, With<PacketHandler>),
+    >,
+    status_clients_query: Query<Entity, (With<ConnectionStatusState>, With<PacketHandler>)>,
+    login_clients_query: Query<Entity, (With<ConnectionLoginState>, With<PacketHandler>)>,
 ) {
-    for (client_id, packet) in network_channels
+    for (entity, packet) in network_channels
         .pending_client_packet_channel
         .receiver
         .try_iter()
     {
-        let Some(client) = network_manager.clients.get_mut(&client_id) else {
-            continue;
-        };
+        if handshaking_clients_query.contains(entity) {
+            handle_client_handshaking_packets(&mut commands, entity, &packet);
+        }
 
-        let result = match client.connection.state {
-            ConnectionState::Handshaking => handle_client_handshaking_packets(client, &packet),
-            ConnectionState::Status => handle_client_status_packets(&packet),
-            ConnectionState::Login => handle_client_login_packets(&packet),
-            ConnectionState::Play => handle_client_play_packets(&packet),
-        };
+        if status_clients_query.contains(entity) {
+            handle_client_status_packets(&packet);
+        }
+
+        if login_clients_query.contains(entity) {
+            handle_client_login_packets(&packet);
+        }
+
+        // let result = match connection_state {
+        //     ConnectionState::Handshaking => handle_client_handshaking_packets(&packet),
+        //     ConnectionState::Status => handle_client_status_packets(&packet),
+        //     ConnectionState::Login => handle_client_login_packets(&packet),
+        //     ConnectionState::Play => handle_client_play_packets(&packet),
+        // };
+        //}
     }
 }
 
 fn handle_client_handshaking_packets(
-    client: &mut Client,
+    commands: &mut Commands,
+    entity: Entity,
     packet: &Packet,
 ) -> Result<(), anyhow::Error> {
     match FromPrimitive::from_i32(packet.id.value) {
@@ -46,9 +63,13 @@ fn handle_client_handshaking_packets(
             let request = ClientHandshakePacket::try_from(packet)?;
             info!(target: "systems", "{:?}", request);
 
+            commands
+                .entity(entity)
+                .remove::<ConnectionHandshakingState>();
+
             match request.next_state {
                 NextState::Status(next_packet) => {
-                    client.connection.state = ConnectionState::Status;
+                    commands.entity(entity).insert(ConnectionStatusState);
 
                     if let Some(next_packet) = next_packet {
                         let request = ClientStatusRequestPacket::try_from(&next_packet)?;
@@ -56,7 +77,7 @@ fn handle_client_handshaking_packets(
                     }
                 }
                 NextState::Login(next_packet) => {
-                    client.connection.state = ConnectionState::Login;
+                    commands.entity(entity).insert(ConnectionLoginState);
 
                     let request = ClientLoginStartPacket::try_from(&next_packet)?;
                     info!(target: "systems", "{:?}", request);
