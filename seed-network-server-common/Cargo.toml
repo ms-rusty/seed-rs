@@ -4,6 +4,7 @@ version = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
+bevy = { workspace = true }
 tokio = { workspace = true }
 bytes = { workspace = true }
 uuid = { workspace = true }

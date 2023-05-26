@@ -37,9 +37,7 @@ pub fn run_app(settings: SeedSettings) {
     // Add tokio plugin.
     app.add_plugin(TokioRuntimePlugin::default());
 
-    app.add_state::<AppState>();
-
-    app.insert_resource(settings);
+    // app.insert_resource(settings);
 
     app.run();
 }
