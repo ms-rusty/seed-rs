@@ -1,7 +1,9 @@
-use bevy::prelude::{App, Plugin};
+use bevy::{app::PluginGroupBuilder, prelude::PluginGroup};
 
-pub struct DatabaseServerPlugin;
+pub struct DatabaseServerPlugins;
 
-impl Plugin for DatabaseServerPlugin {
-    fn build(&self, _app: &mut App) {}
+impl PluginGroup for DatabaseServerPlugins {
+    fn build(self) -> PluginGroupBuilder {
+        PluginGroupBuilder::start::<Self>()
+    }
 }

@@ -7,7 +7,7 @@ use bevy::{
 use bevy_tokio_runtime::TokioRuntimePlugin;
 
 use seed_common::AppState;
-use seed_database_server::DatabaseServerPlugin;
+use seed_database_server::DatabaseServerPlugins;
 use seed_game_world::GameWorldPlugins;
 use seed_network_server::NetworkServerPlugins;
 
@@ -30,7 +30,7 @@ pub fn run_app(settings: SeedSettings) {
 
     // Add seed plugins.
     app.add_plugin(SeedPlugin);
-    app.add_plugin(DatabaseServerPlugin);
+    app.add_plugins(DatabaseServerPlugins);
     app.add_plugins(GameWorldPlugins);
     app.add_plugins(NetworkServerPlugins);
 

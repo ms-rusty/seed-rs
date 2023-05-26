@@ -1,3 +1,3 @@
-pub use plugin::DatabaseServerPlugin;
+pub use plugin::DatabaseServerPlugins;
 
 mod plugin;
