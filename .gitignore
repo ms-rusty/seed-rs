@@ -5,3 +5,9 @@ Cargo.lock
 .cargo/config.toml
 /.idea
 /.vscode
+
+# seed
+/seed_settings.toml
+/database_server_settings.toml
+/game_world_settings.toml
+/network_server_settings.toml
