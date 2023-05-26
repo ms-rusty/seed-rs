@@ -1,6 +1,6 @@
 use std::{fs::File, io::Read};
 
-use bevy::prelude::{info, Commands};
+use bevy::prelude::Commands;
 
 use crate::network_settings::resources::NetworkSettings;
 

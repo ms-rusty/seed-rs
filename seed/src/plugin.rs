@@ -34,18 +34,6 @@ impl Plugin for SeedPlugin {
             Update,
             hihi.run_if(in_state(NetworkServerState::LoadingSettings)),
         );
-
-        // app.add_systems(PreStartup, || println!("PreStartup"));
-        // app.add_systems(Startup, || println!("Startup"));
-        // app.add_systems(PostStartup, || println!("PostStartup"));
-        // app.add_systems(First, || println!("First"));
-        // app.add_systems(PreUpdate, || println!("PreUpdate"));
-        // app.add_systems(StateTransition, || println!("StateTransition"));
-        // app.add_systems(RunFixedUpdateLoop, || println!("RunFixedUpdateLoop"));
-        // app.add_systems(FixedUpdate, || println!("FixedUpdate"));
-        // app.add_systems(Update, || println!("Update"));
-        // app.add_systems(PostUpdate, || println!("PostUpdate"));
-        // app.add_systems(Last, || println!("Last"));
     }
 }
 
@@ -79,3 +67,15 @@ fn init_network_server(mut next_state: ResMut<NextState<NetworkServerState>>) {
 fn running_app(mut next_state: ResMut<NextState<AppState>>) {
     next_state.set(AppState::Running);
 }
+
+// app.add_systems(PreStartup, || println!("PreStartup"));
+// app.add_systems(Startup, || println!("Startup"));
+// app.add_systems(PostStartup, || println!("PostStartup"));
+// app.add_systems(First, || println!("First"));
+// app.add_systems(PreUpdate, || println!("PreUpdate"));
+// app.add_systems(StateTransition, || println!("StateTransition"));
+// app.add_systems(RunFixedUpdateLoop, || println!("RunFixedUpdateLoop"));
+// app.add_systems(FixedUpdate, || println!("FixedUpdate"));
+// app.add_systems(Update, || println!("Update"));
+// app.add_systems(PostUpdate, || println!("PostUpdate"));
+// app.add_systems(Last, || println!("Last"));

@@ -6,6 +6,6 @@ pub enum NetworkServerState {
     Pending,
     LoadingSettings,
     SettingRuntime,
-    StartingListener,
+    StartingConnectionListener,
     Running,
 }

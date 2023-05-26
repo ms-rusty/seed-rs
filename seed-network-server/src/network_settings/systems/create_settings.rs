@@ -1,7 +1,5 @@
 use std::{fs::File, io::Write, path::Path};
 
-use bevy::prelude::info;
-
 use crate::network_settings::resources::NetworkSettings;
 
 use super::NETWORK_SETTINGS_PATH;

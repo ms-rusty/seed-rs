@@ -6,5 +6,5 @@ pub struct Listener(pub TcpListener);
 
 #[derive(Resource)]
 pub struct ListenerTask {
-    pub task: JoinHandle<Result<TcpListener, std::io::Error>>,
+    pub task: JoinHandle<()>,
 }

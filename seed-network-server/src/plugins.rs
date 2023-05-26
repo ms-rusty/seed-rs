@@ -1,8 +1,8 @@
 use bevy::{app::PluginGroupBuilder, prelude::PluginGroup};
 
 use crate::{
-    network_listener_manager::NetworkListenerManagerPlugin, network_manager::NetworkManagerPlugin,
-    network_message_manager::NetworkMessageManagerPlugin,
+    network_connection_manager::NetworkConnectionManagerPlugin,
+    network_manager::NetworkManagerPlugin, network_message_manager::NetworkMessageManagerPlugin,
     network_packet_manager::NetworkPacketManagerPlugin, network_settings::NetworkSettingsPlugin,
 };
 
@@ -12,7 +12,7 @@ impl PluginGroup for NetworkServerPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(NetworkSettingsPlugin)
-            .add(NetworkListenerManagerPlugin)
+            .add(NetworkConnectionManagerPlugin)
             .add(NetworkMessageManagerPlugin)
             .add(NetworkPacketManagerPlugin)
             .add(NetworkManagerPlugin)

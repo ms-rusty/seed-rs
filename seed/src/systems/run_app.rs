@@ -6,7 +6,6 @@ use bevy::{
 };
 use bevy_tokio_runtime::TokioRuntimePlugin;
 
-use seed_common::AppState;
 use seed_database_server::DatabaseServerPlugins;
 use seed_game_world::GameWorldPlugins;
 use seed_network_server::NetworkServerPlugins;
