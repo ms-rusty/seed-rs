@@ -1,11 +1,9 @@
 use bevy::prelude::States;
 
 #[derive(States, Default, Debug, PartialEq, Eq, Hash, Clone)]
-pub enum AppState {
+pub enum DatabaseServerState {
     #[default]
-    StartingSeed,
-    StartingDatabaseServer,
-    StartingGameWorld,
-    StartingNetworkServer,
+    Settings, // provavelmente validar a connectionstring
+    Loading,
     Running,
 }

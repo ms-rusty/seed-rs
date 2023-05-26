@@ -7,7 +7,9 @@ use crate::network_settings::resources::NetworkSettings;
 use super::NETWORK_SETTINGS_PATH;
 
 pub fn create_settings_system() -> Result<(), anyhow::Error> {
-    if Path::exists(Path::new(NETWORK_SETTINGS_PATH)) {
+    let network_settings_path = Path::new(NETWORK_SETTINGS_PATH);
+    let settings_exists = Path::exists(network_settings_path);
+    if settings_exists {
         return Ok(());
     }
 

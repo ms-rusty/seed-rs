@@ -1,5 +1,5 @@
 use num_derive::FromPrimitive;
-use seed_network_common::VarInt;
+use seed_network_server_common::VarInt;
 
 // https://wiki.vg/Protocol#Handshaking
 #[derive(FromPrimitive, Clone, Copy)]

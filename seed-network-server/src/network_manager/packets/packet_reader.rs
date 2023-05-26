@@ -1,5 +1,5 @@
 use bytes::Buf;
-use seed_network_common::{VarInt, VarLong};
+use seed_network_server_common::{VarInt, VarLong};
 use std::io::Cursor;
 use uuid::Uuid;
 

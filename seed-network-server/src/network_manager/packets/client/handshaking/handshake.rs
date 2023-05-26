@@ -1,6 +1,6 @@
 use bevy::prelude::info;
 use bytes::BytesMut;
-use seed_network_common::VarInt;
+use seed_network_server_common::VarInt;
 
 use crate::network_manager::packets::{
     client::packets::ClientHandshakingPackets,

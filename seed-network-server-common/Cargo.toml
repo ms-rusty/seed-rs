@@ -1,5 +1,5 @@
 [package]
-name = "seed-network-common"
+name = "seed-network-server-common"
 version = { workspace = true }
 edition = { workspace = true }
 

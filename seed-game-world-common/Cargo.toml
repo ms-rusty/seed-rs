@@ -1,5 +1,5 @@
 [package]
-name = "seed-game-common"
+name = "seed-game-world-common"
 version = { workspace = true }
 edition = { workspace = true }
 

@@ -5,7 +5,7 @@ pub struct SeedPlugin;
 
 impl Plugin for SeedPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(AppState::Loading), app_state_system);
+        // app.add_systems(OnEnter(AppState::Loading), app_state_system);
 
         // app.add_systems(PreStartup, || println!("PreStartup"));
         // app.add_systems(Startup, || println!("Startup"));
@@ -21,6 +21,6 @@ impl Plugin for SeedPlugin {
     }
 }
 
-fn app_state_system(mut next_state: ResMut<NextState<AppState>>) {
-    next_state.set(AppState::Services);
-}
+// fn app_state_system(mut next_state: ResMut<NextState<AppState>>) {
+//     next_state.set(AppState::Services);
+// }

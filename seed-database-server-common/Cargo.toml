@@ -1,5 +1,5 @@
 [package]
-name = "seed-database-common"
+name = "seed-database-server-common"
 version = { workspace = true }
 edition = { workspace = true }
 

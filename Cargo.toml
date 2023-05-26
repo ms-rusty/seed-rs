@@ -14,12 +14,12 @@ resolver = "2"
 members = [
     "seed",
     "seed-common",
-    "seed-database-common",
     "seed-database-server",
-    "seed-game-common",
+    "seed-database-server-common",
     "seed-game-world",
-    "seed-network-common",
+    "seed-game-world-common",
     "seed-network-server",
+    "seed-network-server-common",
 ]
 
 [workspace.dependencies]

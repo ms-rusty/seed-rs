@@ -6,9 +6,13 @@ edition = { workspace = true }
 [dependencies]
 seed-common = { path = "../seed-common" }
 seed-database-server = { path = "../seed-database-server" }
+seed-database-server-common = { path = "../seed-database-server-common" }
 seed-game-world = { path = "../seed-game-world" }
+seed-game-world-common = { path = "../seed-game-world-common" }
 seed-network-server = { path = "../seed-network-server" }
+seed-network-server-common = { path = "../seed-network-server-common" }
 
+anyhow = { workspace = true }
 bevy = { workspace = true }
 bevy_tokio_runtime = { workspace = true }
 serde = { workspace = true }

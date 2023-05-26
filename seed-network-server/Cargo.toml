@@ -5,7 +5,7 @@ edition = { workspace = true }
 
 [dependencies]
 seed-common = { path = "../seed-common" }
-seed-network-common = { path = "../seed-network-common" }
+seed-network-server-common = { path = "../seed-network-server-common" }
 
 anyhow = { workspace = true }
 bevy = { workspace = true }

@@ -1,6 +1,6 @@
 use bevy::prelude::info;
 use bytes::{Bytes, BytesMut};
-use seed_network_common::VarInt;
+use seed_network_server_common::VarInt;
 use tokio::{
     io::{AsyncReadExt, AsyncWriteExt, BufReader, BufWriter},
     net::tcp::{OwnedReadHalf, OwnedWriteHalf},
