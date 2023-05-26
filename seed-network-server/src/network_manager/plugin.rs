@@ -40,7 +40,7 @@ fn configure_tokio_runtime_system(
     mut tokio_runtime: ResMut<TokioRuntime>,
     network_settings: Res<NetworkSettings>,
 ) {
-    let runtime_threads = network_settings.runtime_threads;
+    let runtime_threads = network_settings.task_pool_threads;
 
     let runtime = Builder::new_multi_thread()
         .enable_io()

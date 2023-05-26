@@ -8,7 +8,7 @@ pub struct NetworkSettings {
     pub server_address: SocketAddr,
     pub max_packet_length: u32,
     pub use_nagle_algorithm: bool,
-    pub runtime_threads: usize,
+    pub task_pool_threads: usize,
 }
 
 impl Default for NetworkSettings {
@@ -17,7 +17,7 @@ impl Default for NetworkSettings {
             server_address: SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 25565),
             max_packet_length: Default::default(),
             use_nagle_algorithm: false,
-            runtime_threads: 1,
+            task_pool_threads: 1,
         }
     }
 }
