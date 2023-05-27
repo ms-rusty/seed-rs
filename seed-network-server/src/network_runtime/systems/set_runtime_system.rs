@@ -4,7 +4,7 @@ use tokio::runtime::Builder;
 
 use crate::network_settings::NetworkSettings;
 
-pub fn set_runtime(
+pub fn set_runtime_system(
     mut tokio_runtime: ResMut<TokioRuntime>,
     network_settings: Res<NetworkSettings>,
 ) -> Result<(), anyhow::Error> {

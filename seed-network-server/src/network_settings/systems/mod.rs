@@ -1,8 +1,8 @@
-pub use load_settings::load_settings_system;
-pub use next_state::next_state;
+pub use load_settings_system::load_settings_system;
+pub use next_state_system::next_state_system;
 
-mod load_settings;
-mod next_state;
+mod load_settings_system;
+mod next_state_system;
 
 #[cfg(test)]
 mod tests {
@@ -11,8 +11,8 @@ mod tests {
     use serial_test::serial;
 
     use crate::network_settings::systems::{
-        load_settings::{default_settings, get_or_default, get_settings, remove_settings},
-        next_state,
+        load_settings_system::{default_settings, get_or_default, get_settings, remove_settings},
+        next_state_system,
     };
 
     #[test]
@@ -42,7 +42,7 @@ mod tests {
         let mut app = App::new();
         app.add_state::<NetworkServerState>();
 
-        app.add_systems(Update, next_state);
+        app.add_systems(Update, next_state_system);
 
         app.update();
 
@@ -67,7 +67,7 @@ mod tests {
         let mut app = App::new();
         app.add_state::<NetworkServerState>();
 
-        app.add_systems(Update, next_state);
+        app.add_systems(Update, next_state_system);
 
         app.update();
         app.update();

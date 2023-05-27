@@ -4,7 +4,7 @@ use seed_network_server_common::NetworkServerState;
 
 use super::{
     resources::NetworkSettings,
-    systems::{load_settings_system, next_state},
+    systems::{load_settings_system, next_state_system},
 };
 
 pub struct NetworkSettingsPlugin;
@@ -15,10 +15,7 @@ impl Plugin for NetworkSettingsPlugin {
 
         app.add_systems(
             OnEnter(NetworkServerState::LoadingSettings),
-            (load_settings_system.pipe(handle_error), next_state).chain(),
+            (load_settings_system.pipe(handle_error), next_state_system).chain(),
         );
     }
 }
-
-#[cfg(test)]
-mod tests {}

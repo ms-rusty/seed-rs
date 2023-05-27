@@ -10,7 +10,6 @@ use crate::network_settings::resources::{NetworkSettings, FILE_NAME};
 
 pub fn load_settings_system(mut commands: Commands) -> Result<(), anyhow::Error> {
     let network_settings = get_or_default()?;
-
     commands.insert_resource(network_settings);
 
     Ok(())

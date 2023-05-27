@@ -20,20 +20,20 @@ impl Plugin for SeedPlugin {
         app.add_systems(OnEnter(AppState::Loading), init_database_server);
         app.add_systems(OnEnter(DatabaseServerState::Running), init_game_world);
         app.add_systems(OnEnter(GameWorldState::Running), init_network_server);
-        app.add_systems(OnEnter(NetworkServerState::Running), running_app);
+        // app.add_systems(OnEnter(NetworkServerState::Running), running_app);
 
-        app.add_systems(
-            Update,
-            haha.run_if(in_state(DatabaseServerState::LoadingSettings)),
-        );
-        app.add_systems(
-            Update,
-            hehe.run_if(in_state(GameWorldState::LoadingSettings)),
-        );
-        app.add_systems(
-            Update,
-            hihi.run_if(in_state(NetworkServerState::LoadingSettings)),
-        );
+        // app.add_systems(
+        //     Update,
+        //     haha.run_if(in_state(DatabaseServerState::LoadingSettings)),
+        // );
+        // app.add_systems(
+        //     Update,
+        //     hehe.run_if(in_state(GameWorldState::LoadingSettings)),
+        // );
+        // app.add_systems(
+        //     Update,
+        //     hihi.run_if(in_state(NetworkServerState::LoadingSettings)),
+        // );
     }
 }
 
@@ -53,11 +53,11 @@ fn hihi(mut next_state: ResMut<NextState<NetworkServerState>>) {
 }
 
 pub fn init_database_server(mut next_state: ResMut<NextState<DatabaseServerState>>) {
-    next_state.set(DatabaseServerState::LoadingSettings);
+    next_state.set(DatabaseServerState::Running);
 }
 
 fn init_game_world(mut next_state: ResMut<NextState<GameWorldState>>) {
-    next_state.set(GameWorldState::LoadingSettings);
+    next_state.set(GameWorldState::Running);
 }
 
 fn init_network_server(mut next_state: ResMut<NextState<NetworkServerState>>) {

@@ -1,3 +1,3 @@
-pub use connection::ConnectionEvent;
+pub use connection_event::ConnectionEvent;
 
-mod connection;
+mod connection_event;
