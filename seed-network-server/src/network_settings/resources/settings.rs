@@ -3,6 +3,8 @@ use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use bevy::prelude::Resource;
 use serde::{Deserialize, Serialize};
 
+pub const FILE_NAME: &str = "network_server_settings.toml";
+
 #[derive(Resource, Serialize, Deserialize)]
 pub struct NetworkSettings {
     pub server_address: SocketAddr,

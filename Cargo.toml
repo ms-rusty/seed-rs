@@ -31,6 +31,7 @@ crossbeam-channel = "0.5.8"
 num-derive = "0.3.3"
 num-traits = "0.2.15"
 serde = "1.0.163"
+serial_test = "2.0.0"
 thiserror = "1.0.40"
 tokio = { version = "1.28.1", features = ["full"] }
 toml = "0.7.3"
