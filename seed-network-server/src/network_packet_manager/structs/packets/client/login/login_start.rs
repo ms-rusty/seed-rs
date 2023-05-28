@@ -1,6 +1,6 @@
 use uuid::Uuid;
 
-use crate::network_manager::packets::{
+use crate::network_packet_manager::packets::{
     packet_errors::PacketError, packet_reader::PacketReader, ClientLoginPackets, Packet,
 };
 

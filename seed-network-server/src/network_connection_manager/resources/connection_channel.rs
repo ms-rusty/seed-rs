@@ -11,7 +11,7 @@ pub struct ConnectionChannel {
 
 impl Default for ConnectionChannel {
     fn default() -> Self {
-        let (sender, receiver) = crossbeam_channel::bounded::<ConnectionEvent>(1);
+        let (sender, receiver) = crossbeam_channel::unbounded::<ConnectionEvent>();
         Self { sender, receiver }
     }
 }

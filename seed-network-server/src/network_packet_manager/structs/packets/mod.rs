@@ -3,7 +3,7 @@ pub use client::{
     ClientPingRequestPacket, ClientStatusPackets, ClientStatusRequestPacket, NextState,
     ServerPlayPackets,
 };
-pub use packet::{read_packet, write_packet, Packet};
+pub use packet::write_packet;
 
 mod client;
 mod packet;

@@ -1,4 +1,6 @@
-use crate::network_manager::packets::{packet_errors::PacketError, ClientStatusPackets, Packet};
+use crate::network_packet_manager::packets::{
+    packet_errors::PacketError, ClientStatusPackets, Packet,
+};
 
 #[derive(Debug)]
 pub struct ClientStatusRequestPacket;

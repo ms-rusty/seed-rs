@@ -1,6 +1,6 @@
 use seed_network_server_common::VarInt;
 
-use crate::network_manager::packets::{
+use crate::network_packet_manager::packets::{
     packet_writer::PacketWriter, server::ServerStatusPackets, Packet,
 };
 

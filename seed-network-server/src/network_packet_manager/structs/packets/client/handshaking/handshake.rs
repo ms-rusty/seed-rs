@@ -2,7 +2,7 @@ use bevy::prelude::info;
 use bytes::BytesMut;
 use seed_network_server_common::VarInt;
 
-use crate::network_manager::packets::{
+use crate::network_packet_manager::packets::{
     client::packets::ClientHandshakingPackets,
     packet_errors::{PacketError, PacketReaderError},
     packet_reader::PacketReader,

@@ -1,16 +1,4 @@
-use bevy::prelude::{App, First, IntoSystemConfigs, Plugin, PreUpdate, Res, ResMut, Startup};
-use bevy_tokio_runtime::TokioRuntime;
-use tokio::runtime::Builder;
-
-use crate::network_settings::NetworkSettings;
-
-use super::{
-    resources::{NetworkChannels, NetworkManager},
-    systems::{
-        create_packet_handlers_system, handle_client_packets, handle_connection_event_system,
-        start_listening_system,
-    },
-};
+use bevy::prelude::{App, Plugin};
 
 pub struct NetworkManagerPlugin;
 
