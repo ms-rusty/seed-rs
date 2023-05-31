@@ -3,7 +3,7 @@ use seed_network_server_common::NetworkServerState;
 
 use super::{
     resources::ReadPacketChannel,
-    systems::{handle_read_packets_events, init_connection_packet_handler_reader_system},
+    systems::{init_connection_packet_handler_reader_system, map_packets_events_system},
 };
 
 pub struct NetworkPacketManagerPlugin;
@@ -16,7 +16,7 @@ impl Plugin for NetworkPacketManagerPlugin {
             Update,
             (
                 init_connection_packet_handler_reader_system,
-                handle_read_packets_events,
+                map_packets_events_system,
             )
                 .chain()
                 .run_if(in_state(NetworkServerState::Running)),

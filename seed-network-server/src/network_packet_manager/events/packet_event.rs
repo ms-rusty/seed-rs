@@ -1,6 +1,6 @@
 use bevy::prelude::Entity;
 
-use crate::network_packet_manager::packets::Packet;
+use crate::network_packet_manager::components::Packet;
 
 pub enum ReadPacketEvent {
     Success((Entity, Packet)),

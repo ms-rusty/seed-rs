@@ -5,7 +5,7 @@ use tokio::io::AsyncReadExt;
 
 use crate::{
     network_packet_manager::{
-        events::ReadPacketEvent, packets::Packet, resources::ReadPacketChannel,
+        components::Packet, events::ReadPacketEvent, resources::ReadPacketChannel,
     },
     shared::{
         Connection, ConnectionHandshakingState, ConnectionPacketHandlerReader,

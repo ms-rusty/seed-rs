@@ -1,6 +1,7 @@
-pub use handle_read_packets_events::handle_read_packets_events;
 pub use init_connection_packet_handler_reader_system::init_connection_packet_handler_reader_system;
+pub use packets::map_packets_events_system;
 
 mod handle_read_packets_events;
 mod init_connection_packet_handler_reader_system;
 mod init_connection_packet_handler_writer_system;
+mod packets;
