@@ -2,11 +2,10 @@ use bevy::prelude::{info, Commands, Entity, EventWriter, Query, Res, ResMut, Wit
 use bevy_tokio_runtime::TokioRuntime;
 use num_traits::FromPrimitive;
 
-
 use crate::network_manager::{
     events::{
-        Client, ClientId, Connection, ConnectionHandshakingState, ConnectionLoginState,
-        ConnectionState, ConnectionStatusState, PacketHandler,
+        Client, Connection, ConnectionHandshakingState, ConnectionLoginState, ConnectionState,
+        ConnectionStatusState, PacketHandler,
     },
     packets::{
         ClientHandshakePacket, ClientHandshakingPackets, ClientLoginPackets,
