@@ -1,5 +1,5 @@
-use bevy::prelude::{info, Commands, Entity, EventWriter, Query, With};
-use seed_network_server_common::ClientMessage;
+use bevy::prelude::{info, Commands, Component, Entity, EventWriter, Query, With};
+use seed_network_server_common::{ClientMessage, ClientMessagePingRequest};
 
 use crate::network_packet_manager::components::{
     ClientPingRequestPacket, ClientPingRequestPacketId, ClientStatusRequestPacket,
@@ -35,7 +35,13 @@ pub fn ping_request_system(
 
                 // Entity
 
-                // Entity, ClientMessageStruct, ClientMessageId
+                // Entity, ClientMessagePingRequest
+
+                commands
+                    .entity(packet_entity)
+                    .insert(ClientMessagePingRequest {
+                        payload: packet.payload,
+                    });
 
                 event_writer.send(ClientMessage::PingRequest {
                     payload: packet.payload,
@@ -46,4 +52,9 @@ pub fn ping_request_system(
 
         commands.entity(packet_entity).despawn();
     }
+}
+
+#[derive(Component)]
+pub enum A {
+    B {},
 }
