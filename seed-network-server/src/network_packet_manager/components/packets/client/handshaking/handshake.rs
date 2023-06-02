@@ -1,16 +1,18 @@
 use bevy::prelude::Component;
-use bytes::BytesMut;
+use bytes::{Bytes, BytesMut};
 use seed_network_server_common::VarInt;
 
 use crate::network_packet_manager::components::packets::{
+    packet::{PacketData, PacketId},
     packet_errors::{PacketError, PacketReaderError},
     packet_reader::PacketReader,
     Packet,
 };
 
-use super::ClientHandshakingPackets;
+#[derive(Component)]
+pub struct ClientHandshakePacketId;
 
-#[derive(Component, Debug)]
+#[derive(Debug)]
 pub struct ClientHandshakePacket<'packet> {
     pub protocol_version: VarInt,
     pub server_address: &'packet str,
@@ -18,14 +20,10 @@ pub struct ClientHandshakePacket<'packet> {
     pub next_state: NextState,
 }
 
-impl<'packet> TryFrom<&'packet Packet> for ClientHandshakePacket<'packet> {
+impl<'packet> TryFrom<&'packet Bytes> for ClientHandshakePacket<'packet> {
     type Error = PacketError;
 
-    fn try_from(packet: &'packet Packet) -> Result<Self, Self::Error> {
-        if packet.id != ClientHandshakingPackets::Handshake {
-            return Err(Self::Error::InvalidPacket);
-        }
-
+    fn try_from(packet: &'packet Bytes) -> Result<Self, Self::Error> {
         let mut reader = PacketReader::from(packet);
         let protocol_version = reader.read_var_int()?;
         let server_address = reader.read_str()?;
@@ -45,8 +43,8 @@ impl<'packet> TryFrom<&'packet Packet> for ClientHandshakePacket<'packet> {
                 .freeze();
 
             Some(Packet {
-                id: packet_id,
-                data: buffer,
+                id: PacketId::new(packet_id),
+                data: PacketData::new(buffer),
             })
         } else {
             None

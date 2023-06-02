@@ -1,14 +1,23 @@
-use bevy::prelude::Component;
+use bevy::prelude::{Bundle, Component, Deref, DerefMut};
 use bytes::{Bytes, BytesMut};
 use seed_network_server_common::VarInt;
 
 use super::packet_reader::PacketReader;
 
 // https://wiki.vg/Protocol#Packet_format
-#[derive(Component, Debug)]
+#[derive(Bundle, Debug)]
 pub struct Packet {
-    pub id: VarInt,
-    pub data: Bytes,
+    pub id: PacketId,
+    pub data: PacketData,
+}
+
+impl Packet {
+    pub fn new(id: VarInt, data: Bytes) -> Self {
+        Self {
+            id: PacketId::new(id),
+            data: PacketData::new(data),
+        }
+    }
 }
 
 impl TryFrom<BytesMut> for Packet {
@@ -26,8 +35,30 @@ impl TryFrom<BytesMut> for Packet {
         // info!(target: "packets", "RECV [{}] [{:03X}] {:02x?}", packet_length.value, packet_id.value, &buffer[..]);
 
         Ok(Packet {
-            id: packet_id,
-            data: buffer,
+            id: PacketId::new(packet_id),
+            data: PacketData::new(buffer),
         })
+    }
+}
+
+#[derive(Component, Debug, Deref, DerefMut)]
+pub struct PacketId {
+    pub id: VarInt,
+}
+
+impl PacketId {
+    pub fn new(id: VarInt) -> Self {
+        Self { id }
+    }
+}
+
+#[derive(Component, Debug, Deref, DerefMut)]
+pub struct PacketData {
+    pub data: Bytes,
+}
+
+impl PacketData {
+    pub fn new(data: Bytes) -> Self {
+        Self { data }
     }
 }

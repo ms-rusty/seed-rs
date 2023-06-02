@@ -1,18 +1,18 @@
-use bytes::Buf;
+use bytes::{Buf, Bytes};
 use seed_network_server_common::{VarInt, VarLong};
 use std::io::Cursor;
 use uuid::Uuid;
 
-use super::{packet_errors::PacketReaderError, Packet};
+use super::packet_errors::PacketReaderError;
 
 pub struct PacketReader<'packet> {
     pub cursor: Cursor<&'packet [u8]>,
 }
 
-impl<'packet> From<&'packet Packet> for PacketReader<'packet> {
-    fn from(packet: &'packet Packet) -> Self {
+impl<'packet> From<&'packet Bytes> for PacketReader<'packet> {
+    fn from(data: &'packet Bytes) -> Self {
         Self {
-            cursor: Cursor::new(&packet.data[..]),
+            cursor: Cursor::new(&data[..]),
         }
     }
 }

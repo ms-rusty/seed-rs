@@ -4,6 +4,9 @@ version = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
+seed-game-world-common = { path = "../seed-game-world-common" }
+seed-network-server-common = { path = "../seed-network-server-common" }
+
 bevy = { workspace = true }
 serde = { workspace = true }
 toml = { workspace = true }

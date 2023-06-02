@@ -1,8 +1,6 @@
-use bevy::prelude::{BuildChildren, Commands, Res};
+use bevy::prelude::{info, BuildChildren, Commands, Res};
 
-use crate::network_packet_manager::{
-    components::UndefinedPacket, events::ReadPacketEvent, resources::ReadPacketChannel,
-};
+use crate::network_packet_manager::{events::ReadPacketEvent, resources::ReadPacketChannel};
 
 pub fn map_packets_events_system(
     mut commands: Commands,
@@ -12,7 +10,7 @@ pub fn map_packets_events_system(
         match packet_event {
             ReadPacketEvent::Success((connection_entity, packet)) => {
                 commands.entity(connection_entity).with_children(|parent| {
-                    parent.spawn((packet, UndefinedPacket));
+                    parent.spawn(packet);
                 });
             }
             ReadPacketEvent::Failure((connection_entity, err)) => {

@@ -1,8 +1,11 @@
 pub use client::{
-    ClientHandshakePacket, ClientHandshakingPackets, ClientLoginPackets, ClientLoginStartPacket,
-    ClientPingRequestPacket, ClientPlayPackets, ClientStatusRequestPacket,
+    ClientEncryptionResponsePacketId, ClientHandshakePacket, ClientHandshakePacketId,
+    ClientHandshakingPackets, ClientLoginPackets, ClientLoginPluginResponsePacketId,
+    ClientLoginStartPacket, ClientLoginStartPacketId, ClientPingRequestPacket,
+    ClientPingRequestPacketId, ClientPlayPackets, ClientStatusPackets, ClientStatusRequestPacket,
+    ClientStatusRequestPacketId, NextState,
 };
-pub use packet::Packet;
+pub use packet::{Packet, PacketData, PacketId};
 pub use server::{
     ServerHandshakingPackets, ServerLoginPackets, ServerPingResponsePacket, ServerPlayPackets,
     ServerStatusPackets,

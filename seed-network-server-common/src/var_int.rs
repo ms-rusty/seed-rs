@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct VarInt {
     pub value: i32,
     pub position: usize,

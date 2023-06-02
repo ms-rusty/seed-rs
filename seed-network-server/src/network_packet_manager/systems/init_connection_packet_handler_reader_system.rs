@@ -49,6 +49,8 @@ pub fn init_connection_packet_handler_reader_system(
                     Err(err) => ReadPacketEvent::Failure((entity, err)),
                 };
 
+                println!("{:?}", read_packet_event);
+
                 if let Err(_) = packet_channel_sender.send(read_packet_event) {
                     // Error on send packet event.
                     break;

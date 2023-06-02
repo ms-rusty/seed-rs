@@ -5,6 +5,7 @@ edition = { workspace = true }
 
 [dependencies]
 seed-common = { path = "../seed-common" }
+seed-game-world-common = { path = "../seed-game-world-common" }
 seed-network-server-common = { path = "../seed-network-server-common" }
 
 anyhow = { workspace = true }
