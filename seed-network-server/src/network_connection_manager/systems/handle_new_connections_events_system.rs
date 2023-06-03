@@ -1,10 +1,12 @@
 use bevy::prelude::{Commands, Res};
 
 use crate::{
-    network_connection_manager::{events::ConnectionEvent, resources::ConnectionChannel},
+    network_connection_manager::{
+        bundles::ConnectionBundle, events::ConnectionEvent, resources::ConnectionChannel,
+    },
     shared::{
-        Connection, ConnectionBundle, ConnectionHandshakingState, ConnectionStreamReader,
-        ConnectionStreamWriter,
+        Connection, ConnectionClientPacketsChannel, ConnectionHandshakingState,
+        ConnectionServerPacketsChannel, ConnectionStreamReader, ConnectionStreamWriter,
     },
 };
 
@@ -22,6 +24,8 @@ pub fn handle_new_connections_events_system(
                         connection: Connection::new(socket_addr),
                         stream_reader: ConnectionStreamReader::new(read),
                         stream_writer: ConnectionStreamWriter::new(write),
+                        client_packets_channel: ConnectionClientPacketsChannel::default(),
+                        server_packets_channel: ConnectionServerPacketsChannel::default(),
                     },
                     ConnectionHandshakingState,
                 ));

@@ -1,12 +1,11 @@
-pub use bundles::ConnectionBundle;
 pub use components::{
-    Connection, ConnectionHandshakingState, ConnectionLoginState, ConnectionPacketHandlerReader,
-    ConnectionPacketHandlerWriter, ConnectionPlayState, ConnectionStatusState,
-    ConnectionStreamReader, ConnectionStreamWriter,
+    Connection, ConnectionClientPacketsChannel, ConnectionHandshakingState, ConnectionLoginState,
+    ConnectionPlayState, ConnectionServerPacketsChannel, ConnectionStatusState,
+    ConnectionStreamReader, ConnectionStreamWriter, Packet, PacketData, PacketId,
 };
+pub use errors::{PacketError, PacketReaderError, PacketWriterError};
 pub use resources::NetworkListener;
 
-mod bundles;
 mod components;
-mod events;
+mod errors;
 mod resources;

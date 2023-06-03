@@ -24,7 +24,7 @@ members = [
 
 [workspace.dependencies]
 anyhow = { version = "1.0.71", default-features = false, features = ["std"] }
-bevy = { git = "https://github.com/bevyengine/bevy", commit = "4ce37395da029eb8b58c78c32812fe8329a3a1a4", default-features = false }
+bevy = { git = "https://github.com/bevyengine/bevy", commit = "d1158288d5977ccea8c87adf80359ff9e21a852e", default-features = false }
 bevy_tokio_runtime = { git = "https://github.com/ms-rusty/bevy_tokio_runtime" }
 bytes = { version = "1.4.0", default-features = false }
 crossbeam-channel = { version = "0.5.8", default-features = false }

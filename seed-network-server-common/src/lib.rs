@@ -1,4 +1,4 @@
-pub use components::ClientMessagePingRequest;
+pub use components::{ClientPingRequestMessage, ClientStatusRequestMessage};
 pub use event::{ClientMessage, ServerMessage};
 pub use state::NetworkServerState;
 pub use var_int::VarInt;

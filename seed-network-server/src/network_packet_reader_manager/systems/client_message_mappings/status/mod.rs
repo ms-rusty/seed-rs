@@ -1,0 +1,5 @@
+pub use ping_request_message_mapping_system::ping_request_message_mapping_system;
+pub use status_request_message_mapping_system::status_request_message_mapping_system;
+
+mod ping_request_message_mapping_system;
+mod status_request_message_mapping_system;

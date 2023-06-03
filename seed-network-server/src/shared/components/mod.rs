@@ -1,7 +1,9 @@
 pub use connection::{
-    Connection, ConnectionHandshakingState, ConnectionLoginState, ConnectionPacketHandlerReader,
-    ConnectionPacketHandlerWriter, ConnectionPlayState, ConnectionStatusState,
+    Connection, ConnectionClientPacketsChannel, ConnectionHandshakingState, ConnectionLoginState,
+    ConnectionPlayState, ConnectionServerPacketsChannel, ConnectionStatusState,
     ConnectionStreamReader, ConnectionStreamWriter,
 };
+pub use packet::{Packet, PacketData, PacketId};
 
 mod connection;
+mod packet;
