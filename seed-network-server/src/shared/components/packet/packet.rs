@@ -7,8 +7,8 @@ use super::{PacketData, PacketId};
 // https://wiki.vg/Protocol#Packet_format
 #[derive(Bundle, Debug)]
 pub struct Packet {
-    pub id: PacketId,
-    pub data: PacketData,
+    id: PacketId,
+    data: PacketData,
 }
 
 impl Packet {
@@ -17,5 +17,13 @@ impl Packet {
             id: PacketId::new(id),
             data: PacketData::new(data),
         }
+    }
+
+    pub fn get_id(&self) -> VarInt {
+        self.id.id
+    }
+
+    pub fn get_data(self) -> Bytes {
+        self.data.data
     }
 }

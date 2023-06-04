@@ -38,17 +38,14 @@ impl Plugin for SeedPlugin {
 }
 
 fn haha(mut next_state: ResMut<NextState<DatabaseServerState>>) {
-    println!("haha");
     next_state.set(DatabaseServerState::Running);
 }
 
 fn hehe(mut next_state: ResMut<NextState<GameWorldState>>) {
-    println!("hehe");
     next_state.set(GameWorldState::Running);
 }
 
 fn hihi(mut next_state: ResMut<NextState<NetworkServerState>>) {
-    println!("hihi");
     next_state.set(NetworkServerState::Running);
 }
 

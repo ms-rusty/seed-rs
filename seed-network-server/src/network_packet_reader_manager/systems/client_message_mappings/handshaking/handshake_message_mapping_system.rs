@@ -7,7 +7,7 @@ use crate::{
     shared::{ConnectionHandshakingState, ConnectionLoginState, ConnectionStatusState, PacketData},
 };
 
-pub fn handshake_system(
+pub fn handshake_message_mapping_system(
     mut commands: Commands,
     query: Query<(&Parent, Entity, &PacketData), With<ClientHandshakePacketId>>,
 ) {
@@ -34,10 +34,7 @@ pub fn handshake_system(
                 NextState::Login(next_packet) => {
                     commands
                         .entity(connection_entity.get())
-                        .insert(ConnectionLoginState);
-
-                    commands
-                        .entity(connection_entity.get())
+                        .insert(ConnectionLoginState)
                         .with_children(|parent| {
                             parent.spawn(next_packet);
                         });

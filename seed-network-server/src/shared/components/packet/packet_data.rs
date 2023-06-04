@@ -1,7 +1,7 @@
 use bevy::prelude::{Component, Deref, DerefMut};
 use bytes::Bytes;
 
-#[derive(Component, Debug, Deref, DerefMut)]
+#[derive(Component, Debug)]
 pub struct PacketData {
     pub data: Bytes,
 }

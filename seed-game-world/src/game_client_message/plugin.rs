@@ -1,51 +1,69 @@
-use bevy::prelude::{info, App, EventReader, EventWriter, Plugin, Update};
-use seed_network_server_common::{ClientMessage, ServerMessage};
+use bevy::prelude::{info, App, BuildChildren, Commands, Entity, Parent, Plugin, Query, Update};
+use seed_network_server_common::{
+    ClientLoginStartMessage, ClientPingRequestMessage, ClientStatusRequestMessage,
+    ServerDescription, ServerPingResponseMessage, ServerPlayers, ServerPlayersSample,
+    ServerStatusResponseMessage, ServerVersion,
+};
 
 pub struct GameClientMessagePlugin;
 
 impl Plugin for GameClientMessagePlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<ClientMessage>();
-        app.add_event::<ServerMessage>();
         app.add_systems(Update, system);
     }
 }
 
 fn system(
-    mut event_reader: EventReader<ClientMessage>,
-    mut event_writer: EventWriter<ServerMessage<'static>>,
+    mut commands: Commands,
+    query_sr: Query<(&Parent, Entity, &ClientStatusRequestMessage)>,
+    query_pr: Query<(&Parent, Entity, &ClientPingRequestMessage)>,
+    query_ls: Query<(&Parent, Entity, &ClientLoginStartMessage)>,
 ) {
-    for event in event_reader.iter() {
-        info!("ClientMessage");
-        match event {
-            ClientMessage::StatusRequest => {
-                event_writer.send(ServerMessage::StatusResponse {
-                    response: r#"{
-                    "version": {
-                        "name": "1.19.4",
-                        "protocol": 762
-                    },
-                    "players": {
-                        "max": 100,
-                        "online": 5,
-                        "sample": [
-                            {
-                                "name": "thinkofdeath",
-                                "id": "4566e69f-c907-48ee-8d71-d7ba5aa00d20"
-                            }
-                        ]
-                    },
-                    "description": {
-                        "text": "Hello world"
-                    },
-                    "favicon": "data:image/png;base64,<data>",
-                    "enforcesSecureChat": true
-                }"#,
+    for (connection_entity, entity, message) in &query_sr {
+        commands.entity(entity).despawn();
+
+        commands
+            .entity(connection_entity.get())
+            .with_children(|parent| {
+                let mut samples = vec![];
+                samples.push(ServerPlayersSample {
+                    name: "thinkofdeath".to_owned(),
+                    id: "4566e69f-c907-48ee-8d71-d7ba5aa00d20".to_owned(),
                 });
-            }
-            ClientMessage::PingRequest { payload } => {
-                event_writer.send(ServerMessage::PingResponse { payload: *payload });
-            }
-        }
+
+                parent.spawn(ServerStatusResponseMessage {
+                    version: ServerVersion {
+                        name: "1.19.4".to_owned(),
+                        protocol: 762,
+                    },
+                    players: ServerPlayers {
+                        max: 1,
+                        online: 1,
+                        sample: samples,
+                    },
+                    description: ServerDescription {
+                        text: "Hello world".to_owned(),
+                    },
+                    favicon: None,
+                    enforces_secure_chat: true,
+                    previews_chat: true,
+                });
+            });
+    }
+
+    for (connection_entity, entity, message) in &query_pr {
+        commands.entity(entity).despawn();
+
+        commands
+            .entity(connection_entity.get())
+            .with_children(|parent| {
+                parent.spawn(ServerPingResponseMessage {
+                    payload: message.payload,
+                });
+            });
+    }
+
+    for (connection_entity, entity, message) in &query_ls {
+        commands.entity(entity).despawn();
     }
 }

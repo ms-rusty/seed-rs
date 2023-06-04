@@ -5,6 +5,7 @@ use crate::{
     network_listener_manager::NetworkListenerManagerPlugin,
     network_message_manager::NetworkMessageManagerPlugin,
     network_packet_reader_manager::NetworkPacketReaderManagerPlugin,
+    network_packet_writer_manager::NetworkPacketWriterManagerPlugin,
     network_runtime::NetworkRuntimePlugin, network_settings::NetworkSettingsPlugin,
 };
 
@@ -19,5 +20,6 @@ impl PluginGroup for NetworkServerPlugins {
             .add(NetworkConnectionManagerPlugin)
             .add(NetworkMessageManagerPlugin)
             .add(NetworkPacketReaderManagerPlugin)
+            .add(NetworkPacketWriterManagerPlugin)
     }
 }

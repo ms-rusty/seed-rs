@@ -15,18 +15,9 @@ pub fn ping_request_message_mapping_system(
     for (packet_entity, packet_data) in &query {
         match ClientPingRequestPacket::try_from(&packet_data.data) {
             Ok(packet) => {
-                // Entity, PacketData, ClientPingRequestPacketId
-
                 commands
                     .entity(packet_entity)
-                    .remove::<ClientPingRequestPacketId>();
-
-                // Entity, PacketData
-
-                // Entity, PacketData, ClientPingRequestMessage
-
-                commands
-                    .entity(packet_entity)
+                    .remove::<ClientPingRequestPacketId>()
                     .insert(ClientPingRequestMessage {
                         payload: packet.payload,
                     });

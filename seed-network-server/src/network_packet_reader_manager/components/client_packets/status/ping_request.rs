@@ -1,12 +1,12 @@
 use bevy::prelude::Component;
 use bytes::Bytes;
 
-use crate::{network_packet_reader_manager::utils::PacketReader, shared::PacketError};
+use crate::shared::{PacketError, PacketReader};
 
 #[derive(Component)]
 pub struct ClientPingRequestPacketId;
 
-#[derive(Component, Debug)]
+#[derive(Debug)]
 pub struct ClientPingRequestPacket {
     pub payload: i64,
 }

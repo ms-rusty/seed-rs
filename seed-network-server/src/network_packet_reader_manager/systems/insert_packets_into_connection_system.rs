@@ -13,7 +13,7 @@ pub fn insert_packets_into_connection_system(
     >,
 ) {
     for (connection_entity, client_packets_channel) in &query {
-        for packet in client_packets_channel.receiver.try_recv() {
+        for packet in client_packets_channel.receiver.try_iter() {
             match packet {
                 Ok(packet) => {
                     commands.entity(connection_entity).with_children(|parent| {

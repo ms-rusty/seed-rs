@@ -7,4 +7,6 @@ edition = { workspace = true }
 bevy = { workspace = true }
 tokio = { workspace = true }
 bytes = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
 uuid = { workspace = true }

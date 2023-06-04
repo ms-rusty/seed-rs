@@ -1,38 +1,19 @@
-pub struct ServerStatusResponsePacket<'packet> {
-    pub version: ServerVersion<'packet>,
-    pub players: ServerPlayers,
-    pub description: ServerDescription,
+use bevy::prelude::Component;
+
+use crate::{shared::Packet, shared::PacketWriter};
+
+use super::ServerStatusPackets;
+
+#[derive(Component)]
+pub struct ServerStatusResponsePacket {
+    pub json_response: String,
 }
 
-pub struct ServerVersion<'packet> {
-    pub name: &'packet str,
-    pub protocol: ServerProtocol,
+impl From<&ServerStatusResponsePacket> for Packet {
+    fn from(packet: &ServerStatusResponsePacket) -> Self {
+        let mut writer = PacketWriter::new(ServerStatusPackets::StatusResponse.into());
+        writer.write_str(&packet.json_response);
+
+        writer.into()
+    }
 }
-
-pub struct ServerPlayers {
-    pub max: u32,
-    pub online: u32,
-}
-
-pub struct ServerDescription {}
-
-pub enum ServerProtocol {
-    V1_19_4 = 762,
-}
-
-// let payload = StatusResponse {
-//     version: Version {
-//         name: SERVER_NAME,
-//         protocol: PROTOCOL_VERSION,
-//     },
-//     players: Players {
-//         max: worker.options().max_players,
-//         online: worker.player_count(),
-//     },
-//     description: Text::from(worker.options().motd.clone()),
-//     favicon: worker
-//         .options()
-//         .favicon
-//         .as_ref()
-//         .map(Favicon::base64_encoded),
-// };

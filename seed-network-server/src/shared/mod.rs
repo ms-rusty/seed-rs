@@ -5,7 +5,9 @@ pub use components::{
 };
 pub use errors::{PacketError, PacketReaderError, PacketWriterError};
 pub use resources::NetworkListener;
+pub use utils::{PacketReader, PacketWriter};
 
 mod components;
 mod errors;
 mod resources;
+mod utils;

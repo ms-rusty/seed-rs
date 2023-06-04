@@ -13,3 +13,9 @@ impl PartialEq<ServerStatusPackets> for VarInt {
         self.value == *packet as i32
     }
 }
+
+impl Into<VarInt> for ServerStatusPackets {
+    fn into(self) -> VarInt {
+        VarInt::from(self as i32)
+    }
+}

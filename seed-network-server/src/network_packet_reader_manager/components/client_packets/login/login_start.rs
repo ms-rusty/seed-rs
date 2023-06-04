@@ -2,22 +2,22 @@ use bevy::prelude::Component;
 use bytes::Bytes;
 use uuid::Uuid;
 
-use crate::{network_packet_reader_manager::utils::PacketReader, shared::PacketError};
+use crate::shared::{PacketError, PacketReader};
 
 #[derive(Component)]
 pub struct ClientLoginStartPacketId;
 
-#[derive(Component, Debug)]
-pub struct ClientLoginStartPacket<'packet> {
-    pub username: &'packet str,
+#[derive(Debug)]
+pub struct ClientLoginStartPacket {
+    pub username: String,
     pub has_player_uuid: bool,
     pub player_uuid: Option<Uuid>,
 }
 
-impl<'packet> TryFrom<&'packet Bytes> for ClientLoginStartPacket<'packet> {
+impl TryFrom<&Bytes> for ClientLoginStartPacket {
     type Error = PacketError;
 
-    fn try_from(packet: &'packet Bytes) -> Result<Self, Self::Error> {
+    fn try_from(packet: &Bytes) -> Result<Self, Self::Error> {
         let mut reader = PacketReader::from(packet);
         let username = reader.read_str()?;
         let has_player_uuid = reader.read_bool()?;
@@ -26,6 +26,8 @@ impl<'packet> TryFrom<&'packet Bytes> for ClientLoginStartPacket<'packet> {
         } else {
             None
         };
+
+        let username = username.to_owned();
 
         Ok(Self {
             username,

@@ -14,19 +14,10 @@ pub fn status_request_message_mapping_system(
 ) {
     for (packet_entity, packet_data) in &query {
         match ClientStatusRequestPacket::try_from(&packet_data.data) {
-            Ok(packet) => {
-                // Entity, PacketData, ClientStatusRequestPacketId
-
+            Ok(_) => {
                 commands
                     .entity(packet_entity)
-                    .remove::<ClientStatusRequestPacketId>();
-
-                // Entity, PacketData
-
-                // Entity, PacketData, ClientStatusRequestMessage
-
-                commands
-                    .entity(packet_entity)
+                    .remove::<ClientStatusRequestPacketId>()
                     .insert(ClientStatusRequestMessage);
             }
             Err(_) => {}

@@ -1,13 +1,18 @@
 use bytes::{BufMut, Bytes, BytesMut};
+use seed_network_server_common::VarInt;
+
+use crate::shared::Packet;
 
 pub struct PacketWriter {
+    packet_id: VarInt,
     data: BytesMut,
 }
 
 #[allow(dead_code)]
 impl PacketWriter {
-    pub fn new() -> Self {
+    pub fn new(packet_id: VarInt) -> Self {
         Self {
+            packet_id,
             data: BytesMut::new(),
         }
     }
@@ -96,7 +101,8 @@ impl PacketWriter {
         self.data.put_u8(value as u8);
     }
 
-    pub fn write_var_int(&mut self, mut value: i32) -> usize {
+    pub fn write_var_int(&mut self, value: i32) -> usize {
+        let mut value = value as u32;
         let mut position = 0;
 
         loop {
@@ -117,5 +123,39 @@ impl PacketWriter {
         }
 
         position
+    }
+
+    pub fn write_var_long(&mut self, mut value: i64) -> usize {
+        let mut position = 0;
+
+        loop {
+            let mut byte = (value & 0x7F) as u8;
+            value >>= 7;
+
+            if value != 0 {
+                byte |= 0x80;
+            }
+
+            self.write_u8(byte);
+
+            position += 1;
+
+            if value == 0 {
+                break;
+            }
+        }
+
+        position
+    }
+
+    pub fn write_str(&mut self, value: &str) {
+        self.write_var_int(value.len() as i32);
+        self.write_bytes(value.as_bytes());
+    }
+}
+
+impl Into<Packet> for PacketWriter {
+    fn into(self) -> Packet {
+        Packet::new(self.packet_id, self.get_data())
     }
 }

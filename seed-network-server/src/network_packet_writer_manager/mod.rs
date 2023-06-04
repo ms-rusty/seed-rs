@@ -1,4 +1,4 @@
-pub use systems::start_connection_packet_writer_system;
+pub use plugin::NetworkPacketWriterManagerPlugin;
 
 mod components;
 mod plugin;

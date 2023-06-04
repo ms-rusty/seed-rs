@@ -2,10 +2,7 @@ use bevy::prelude::Component;
 use bytes::{Bytes, BytesMut};
 use seed_network_server_common::VarInt;
 
-use crate::{
-    network_packet_reader_manager::utils::PacketReader,
-    shared::{Packet, PacketError, PacketReaderError},
-};
+use crate::shared::{Packet, PacketError, PacketReader, PacketReaderError};
 
 #[derive(Component)]
 pub struct ClientHandshakePacketId;
@@ -29,7 +26,7 @@ impl<'packet> TryFrom<&'packet Bytes> for ClientHandshakePacket<'packet> {
         let next_state = reader.read_var_int()?;
 
         // Packet from next state.
-        let packet = if reader.remaining() > 0 {
+        let next_packet = if reader.remaining() > 0 {
             let mut data = BytesMut::from(reader.get_remaining_bytes()?);
 
             let mut reader = PacketReader::new(&data);
@@ -45,7 +42,7 @@ impl<'packet> TryFrom<&'packet Bytes> for ClientHandshakePacket<'packet> {
             None
         };
 
-        let next_state = NextState::try_from((next_state, packet))?;
+        let next_state = NextState::try_from((next_state, next_packet))?;
 
         Ok(Self {
             protocol_version,
