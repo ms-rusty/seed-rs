@@ -29,6 +29,10 @@ impl<'packet> PacketReader<'packet> {
         self.cursor.remaining()
     }
 
+    pub fn has_remaining(&self) -> bool {
+        self.cursor.remaining() > 0
+    }
+
     pub fn get_remaining_bytes(&mut self) -> Result<&'packet [u8], PacketReaderError> {
         Ok(self.read_fixed_length_bytes(self.remaining())?)
     }
