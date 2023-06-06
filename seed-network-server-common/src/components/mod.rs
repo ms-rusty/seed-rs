@@ -1,5 +1,6 @@
 pub use client_messages::{
-    ClientLoginStartMessage, ClientPingRequestMessage, ClientStatusRequestMessage,
+    ClientLoginPluginResponseMessage, ClientLoginStartMessage, ClientPingRequestMessage,
+    ClientStatusRequestMessage,
 };
 pub use server_messages::{
     ServerDescription, ServerPingResponseMessage, ServerPlayers, ServerPlayersSample,

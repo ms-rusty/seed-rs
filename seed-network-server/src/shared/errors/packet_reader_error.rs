@@ -15,6 +15,9 @@ pub enum PacketReaderError {
 
     #[error("VarLong is too big.")]
     VarLongTooBig,
+
+    #[error("ByteArray is too big.")]
+    ByteArrayTooBig,
 }
 
 impl From<PacketReaderError> for PacketError {

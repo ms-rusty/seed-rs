@@ -17,7 +17,7 @@ pub fn login_start_message_mapping_system(
                     .entity(packet_entity)
                     .remove::<ClientLoginStartPacketId>()
                     .insert(ClientLoginStartMessage {
-                        username: packet.username,
+                        username: packet.username.to_owned(),
                         has_player_uuid: packet.has_player_uuid,
                         player_uuid: packet.player_uuid,
                     });

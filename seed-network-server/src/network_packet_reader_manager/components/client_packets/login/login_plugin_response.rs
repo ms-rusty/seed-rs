@@ -2,30 +2,34 @@ use bevy::prelude::Component;
 use bytes::Bytes;
 use seed_network_server_common::VarInt;
 
-use crate::shared::{PacketError, PacketReader};
+use crate::shared::{PacketError, PacketReader, PacketReaderError};
 
 #[derive(Component)]
 pub struct ClientLoginPluginResponsePacketId;
 
+const MAX_DATA_LENGTH: usize = 1048576;
+
 #[derive(Debug)]
-pub struct ClientLoginPluginResponsePacket {
+pub struct ClientLoginPluginResponsePacket<'packet> {
     pub message_id: VarInt,
     pub successful: bool,
-    // data length is 1048576 bytes.
-    pub data: Option<Vec<u8>>, // byte array
+    pub data: Option<&'packet [u8]>, // byte array
 }
 
-impl TryFrom<&Bytes> for ClientLoginPluginResponsePacket {
+impl<'packet> TryFrom<&'packet Bytes> for ClientLoginPluginResponsePacket<'packet> {
     type Error = PacketError;
 
-    fn try_from(packet: &Bytes) -> Result<Self, Self::Error> {
+    fn try_from(packet: &'packet Bytes) -> Result<Self, Self::Error> {
         let mut reader = PacketReader::from(packet);
         let message_id = reader.read_var_int()?;
         let successful = reader.read_bool()?;
 
         let data = if reader.has_remaining() {
-            let remaining_bytes = reader.get_remaining_bytes()?;
-            Some(remaining_bytes.to_owned())
+            if reader.remaining() > MAX_DATA_LENGTH {
+                return Err(PacketReaderError::ByteArrayTooBig.into());
+            }
+
+            Some(reader.get_remaining_bytes()?)
         } else {
             None
         };

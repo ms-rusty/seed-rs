@@ -1,4 +1,4 @@
-use bevy::prelude::{in_state, App, IntoSystemConfigs, Plugin, Update};
+use bevy::prelude::{in_state, App, IntoSystemConfigs, Last, Plugin, Update};
 use seed_network_server_common::NetworkServerState;
 
 use super::systems::{
@@ -12,7 +12,7 @@ pub struct NetworkPacketWriterManagerPlugin;
 impl Plugin for NetworkPacketWriterManagerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
-            Update,
+            Last,
             (
                 start_connection_packet_writer_system,
                 (

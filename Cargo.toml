@@ -24,6 +24,7 @@ members = [
 
 [workspace.dependencies]
 anyhow = { version = "1.0.71", default-features = false, features = ["std"] }
+arrayvec = "0.7.2"
 bevy = { git = "https://github.com/bevyengine/bevy", commit = "d1158288d5977ccea8c87adf80359ff9e21a852e", default-features = false }
 bevy_tokio_runtime = { git = "https://github.com/ms-rusty/bevy_tokio_runtime" }
 bytes = { version = "1.4.0", default-features = false }
@@ -31,9 +32,7 @@ crossbeam-channel = { version = "0.5.8", default-features = false }
 num-derive = "0.3.3"
 num-traits = "0.2.15"
 serde = { version = "1.0.163", default-features = false }
-serde_json = { version = "1.0.96", default-features = false, features = [
-    "std",
-] }
+serde_json = "1.0.96"
 thiserror = "1.0.40"
 tokio = { version = "1.28.2", default-features = false, features = [
     "rt-multi-thread",

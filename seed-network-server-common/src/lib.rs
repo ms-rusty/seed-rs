@@ -1,7 +1,7 @@
 pub use components::{
-    ClientLoginStartMessage, ClientPingRequestMessage, ClientStatusRequestMessage,
-    ServerDescription, ServerPingResponseMessage, ServerPlayers, ServerPlayersSample,
-    ServerStatusResponseMessage, ServerVersion,
+    ClientLoginPluginResponseMessage, ClientLoginStartMessage, ClientPingRequestMessage,
+    ClientStatusRequestMessage, ServerDescription, ServerPingResponseMessage, ServerPlayers,
+    ServerPlayersSample, ServerStatusResponseMessage, ServerVersion,
 };
 pub use state::NetworkServerState;
 pub use var_int::VarInt;

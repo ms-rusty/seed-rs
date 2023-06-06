@@ -3,6 +3,7 @@ use seed_network_server_common::VarInt;
 
 use crate::shared::Packet;
 
+#[derive(Debug)]
 pub struct PacketWriter {
     packet_id: VarInt,
     data: BytesMut,

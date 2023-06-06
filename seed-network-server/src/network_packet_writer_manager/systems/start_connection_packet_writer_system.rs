@@ -1,4 +1,4 @@
-use bevy::prelude::{Commands, Entity, Query, Res, With, Without};
+use bevy::prelude::{error, Commands, Entity, Query, Res, With, Without};
 use bevy_tokio_runtime::TokioRuntime;
 use bytes::{BufMut, BytesMut};
 use tokio::io::AsyncWriteExt;
@@ -70,8 +70,13 @@ pub fn start_connection_packet_writer_system(
 
                         buffer.put(packet_data);
 
-                        println!("{:?}", stream_writer.write_all(&buffer).await);
-                        println!("{:?}", stream_writer.flush().await);
+                        if let Err(err) = stream_writer.write_all(&buffer).await {
+                            error!("{:?}", err);
+                        }
+
+                        if let Err(err) = stream_writer.flush().await {
+                            error!("{:?}", err);
+                        }
                     }
                     Err(_) => {}
                 }

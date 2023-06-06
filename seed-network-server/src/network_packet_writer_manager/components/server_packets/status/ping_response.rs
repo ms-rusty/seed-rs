@@ -4,7 +4,7 @@ use crate::shared::{Packet, PacketWriter};
 
 use super::ServerStatusPackets;
 
-#[derive(Component)]
+#[derive(Component, Debug)]
 pub struct ServerPingResponsePacket {
     pub payload: i64,
 }

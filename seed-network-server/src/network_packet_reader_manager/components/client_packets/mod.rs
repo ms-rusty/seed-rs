@@ -2,8 +2,8 @@ pub use handshaking::{
     ClientHandshakePacket, ClientHandshakePacketId, ClientHandshakingPackets, NextState,
 };
 pub use login::{
-    ClientEncryptionResponsePacketId, ClientLoginPackets, ClientLoginPluginResponsePacketId,
-    ClientLoginStartPacket, ClientLoginStartPacketId,
+    ClientEncryptionResponsePacketId, ClientLoginPackets, ClientLoginPluginResponsePacket,
+    ClientLoginPluginResponsePacketId, ClientLoginStartPacket, ClientLoginStartPacketId,
 };
 pub use play::ClientPlayPackets;
 pub use status::{

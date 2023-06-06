@@ -33,7 +33,7 @@ pub fn start_connection_packet_reader_system(
                     break;
                 }
 
-                println!("packet: {:?}", buffer);
+                // println!("packet: {:?}", buffer);
 
                 if buffer.is_empty() {
                     error!("Lost connection.");

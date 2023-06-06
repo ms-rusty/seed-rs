@@ -8,17 +8,17 @@ use crate::shared::{PacketError, PacketReader};
 pub struct ClientEncryptionResponsePacketId;
 
 #[derive(Debug)]
-pub struct ClientEncryptionResponsePacket {
+pub struct ClientEncryptionResponsePacket<'packet> {
     pub shared_secret_length: VarInt,
-    pub shared_secret: Vec<u8>, // byte array
+    pub shared_secret: &'packet [u8], // byte array
     pub verify_token_length: VarInt,
-    pub verify_token: Vec<u8>, // byte array
+    pub verify_token: &'packet [u8], // byte array
 }
 
-impl TryFrom<&Bytes> for ClientEncryptionResponsePacket {
+impl<'packet> TryFrom<&'packet Bytes> for ClientEncryptionResponsePacket<'packet> {
     type Error = PacketError;
 
-    fn try_from(packet: &Bytes) -> Result<Self, Self::Error> {
+    fn try_from(packet: &'packet Bytes) -> Result<Self, Self::Error> {
         let mut reader = PacketReader::from(packet);
         let shared_secret_length = reader.read_var_int()?;
         let shared_secret = reader.read_fixed_length_bytes(shared_secret_length.value as usize)?;
@@ -27,9 +27,9 @@ impl TryFrom<&Bytes> for ClientEncryptionResponsePacket {
 
         Ok(Self {
             shared_secret_length,
-            shared_secret: shared_secret.to_owned(),
+            shared_secret,
             verify_token_length,
-            verify_token: verify_token.to_owned(),
+            verify_token,
         })
     }
 }

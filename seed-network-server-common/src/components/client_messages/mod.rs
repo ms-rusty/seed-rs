@@ -1,4 +1,4 @@
-pub use login::ClientLoginStartMessage;
+pub use login::{ClientLoginPluginResponseMessage, ClientLoginStartMessage};
 pub use status::{ClientPingRequestMessage, ClientStatusRequestMessage};
 
 mod handshaking;

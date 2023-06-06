@@ -1,5 +1,7 @@
 pub use encryption_response::ClientEncryptionResponsePacketId;
-pub use login_plugin_response::ClientLoginPluginResponsePacketId;
+pub use login_plugin_response::{
+    ClientLoginPluginResponsePacket, ClientLoginPluginResponsePacketId,
+};
 pub use login_start::{ClientLoginStartPacket, ClientLoginStartPacketId};
 pub use packets_id::ClientLoginPackets;
 

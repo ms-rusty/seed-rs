@@ -8,16 +8,16 @@ use crate::shared::{PacketError, PacketReader};
 pub struct ClientLoginStartPacketId;
 
 #[derive(Debug)]
-pub struct ClientLoginStartPacket {
-    pub username: String,
+pub struct ClientLoginStartPacket<'packet> {
+    pub username: &'packet str,
     pub has_player_uuid: bool,
     pub player_uuid: Option<Uuid>,
 }
 
-impl TryFrom<&Bytes> for ClientLoginStartPacket {
+impl<'packet> TryFrom<&'packet Bytes> for ClientLoginStartPacket<'packet> {
     type Error = PacketError;
 
-    fn try_from(packet: &Bytes) -> Result<Self, Self::Error> {
+    fn try_from(packet: &'packet Bytes) -> Result<Self, Self::Error> {
         let mut reader = PacketReader::from(packet);
         let username = reader.read_str()?;
         let has_player_uuid = reader.read_bool()?;
@@ -26,8 +26,6 @@ impl TryFrom<&Bytes> for ClientLoginStartPacket {
         } else {
             None
         };
-
-        let username = username.to_owned();
 
         Ok(Self {
             username,

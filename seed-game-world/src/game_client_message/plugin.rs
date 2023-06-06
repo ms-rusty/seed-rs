@@ -1,15 +1,21 @@
-use bevy::prelude::{info, App, BuildChildren, Commands, Entity, Parent, Plugin, Query, Update};
+use bevy::prelude::{
+    in_state, App, BuildChildren, Commands, Entity, IntoSystemConfigs, Parent, Plugin, PostStartup,
+    PostUpdate, Query, Update,
+};
 use seed_network_server_common::{
     ClientLoginStartMessage, ClientPingRequestMessage, ClientStatusRequestMessage,
-    ServerDescription, ServerPingResponseMessage, ServerPlayers, ServerPlayersSample,
-    ServerStatusResponseMessage, ServerVersion,
+    NetworkServerState, ServerDescription, ServerPingResponseMessage, ServerPlayers,
+    ServerPlayersSample, ServerStatusResponseMessage, ServerVersion,
 };
 
 pub struct GameClientMessagePlugin;
 
 impl Plugin for GameClientMessagePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, system);
+        app.add_systems(
+            PostUpdate,
+            system.run_if(in_state(NetworkServerState::Running)),
+        );
     }
 }
 

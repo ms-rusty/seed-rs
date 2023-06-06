@@ -9,6 +9,7 @@ seed-game-world-common = { path = "../seed-game-world-common" }
 seed-network-server-common = { path = "../seed-network-server-common" }
 
 anyhow = { workspace = true }
+arrayvec = { workspace = true }
 bevy = { workspace = true }
 bevy_tokio_runtime = { workspace = true }
 bytes = { workspace = true }
