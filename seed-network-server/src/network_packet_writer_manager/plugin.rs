@@ -14,7 +14,6 @@ impl Plugin for NetworkPacketWriterManagerPlugin {
         app.add_systems(
             Last,
             (
-                start_connection_packet_writer_system,
                 (
                     status_response_message_mapping_system,
                     ping_response_message_mapping_system,
@@ -23,6 +22,7 @@ impl Plugin for NetworkPacketWriterManagerPlugin {
                     status_response_packets_mapping_system,
                     ping_response_packets_mapping_system,
                 ),
+                start_connection_packet_writer_system,
             )
                 .chain()
                 .run_if(in_state(NetworkServerState::Running)),

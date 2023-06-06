@@ -36,7 +36,8 @@ impl Plugin for NetworkPacketReaderManagerPlugin {
                         // login
                         (login_start_message_mapping_system,),
                         // play
-                    ),
+                    )
+                        .chain(),
                 )
                     .chain(),
             )
